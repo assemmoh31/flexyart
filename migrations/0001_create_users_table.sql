@@ -1,0 +1,8 @@
+-- Migration number: 0001 	 2024-05-22T00:00:00.000Z
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    steam_id TEXT UNIQUE NOT NULL,
+    username TEXT NOT NULL,
+    avatar TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);

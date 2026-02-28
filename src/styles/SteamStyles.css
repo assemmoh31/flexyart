@@ -1,0 +1,101 @@
+/* src/styles/SteamStyles.css */
+:root {
+  --steam-bg-attachment: fixed;
+  --steam-glass-bg: rgba(0, 0, 0, 0.6);
+  --steam-border: rgba(255, 255, 255, 0.1);
+  --steam-accent: #66c0f4;
+  --steam-text-main: #ffffff;
+  --steam-text-muted: #8f98a0;
+  --steam-header-bg: rgba(23, 26, 33, 0.8);
+  --steam-crop-border: #22d3ee; /* Cyan neon for cropper */
+}
+
+.steam-theme-default {
+  --steam-glass-bg: rgba(0, 0, 0, 0.6);
+  --steam-border: rgba(255, 255, 255, 0.1);
+  --steam-accent: #66c0f4;
+  --steam-header-bg: rgba(23, 26, 33, 0.8);
+}
+
+.steam-theme-summer {
+  --steam-glass-bg: rgba(45, 35, 20, 0.6);
+  --steam-border: #e8c33a;
+  --steam-accent: #e8c33a;
+  --steam-header-bg: rgba(35, 25, 10, 0.8);
+}
+
+.steam-theme-midnight {
+  --steam-glass-bg: rgba(11, 16, 30, 0.7);
+  --steam-border: #1e2b4d;
+  --steam-accent: #3b82f6;
+  --steam-header-bg: rgba(5, 8, 15, 0.8);
+}
+
+.steam-theme-steel {
+  --steam-glass-bg: rgba(35, 38, 41, 0.6);
+  --steam-border: #4d545c;
+  --steam-accent: #4dabf7;
+  --steam-header-bg: rgba(25, 28, 31, 0.8);
+}
+
+.steam-theme-cosmic {
+  --steam-glass-bg: rgba(26, 11, 46, 0.6);
+  --steam-border: #a855f7;
+  --steam-accent: #d946ef;
+  --steam-header-bg: linear-gradient(to right, rgba(15, 5, 25, 0.9), rgba(45, 10, 60, 0.9));
+}
+
+.steam-theme-dark {
+  --steam-glass-bg: rgba(15, 15, 15, 0.8);
+  --steam-border: #333333;
+  --steam-accent: #ffffff;
+  --steam-header-bg: rgba(5, 5, 5, 0.9);
+}
+
+.steam-profile-wrapper {
+  font-family: "Motiva Sans", system-ui, -apple-system, sans-serif;
+  color: var(--steam-text-main);
+}
+
+.steam-glass-panel {
+  background: var(--steam-glass-bg);
+  border: 1px solid var(--steam-border);
+  border-radius: 3px;
+  backdrop-filter: blur(8px);
+}
+
+.steam-header-panel {
+  background: var(--steam-header-bg);
+  backdrop-filter: blur(10px);
+}
+
+/* Cropper Overlay Styles */
+.crop-overlay {
+  position: absolute;
+  border: 1px solid var(--steam-crop-border);
+  box-shadow: 0 0 10px var(--steam-crop-border), inset 0 0 10px var(--steam-crop-border);
+  pointer-events: none;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(34, 211, 238, 0.05);
+}
+
+.crop-label {
+  background: var(--steam-crop-border);
+  color: #000;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+/* Hide scrollbar for the canvas */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

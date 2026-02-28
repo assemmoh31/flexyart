@@ -1,0 +1,103 @@
+/* SteamThemes.css */
+:root {
+  --steam-bg-color: #1b2838;
+  --steam-content-bg: rgba(0, 0, 0, 0.3);
+  --steam-border-color: #3c3d3e;
+  --steam-text-primary: #ffffff;
+  --steam-text-secondary: #8f98a0;
+  --steam-accent: #66c0f4;
+  --steam-header-bg: rgba(23, 26, 33, 0.8);
+}
+
+.theme-default {
+  --steam-bg-color: #1b2838;
+  --steam-content-bg: rgba(0, 0, 0, 0.5);
+  --steam-border-color: #3c3d3e;
+  --steam-text-primary: #ffffff;
+  --steam-text-secondary: #8f98a0;
+  --steam-accent: #66c0f4;
+  --steam-header-bg: rgba(23, 26, 33, 0.8);
+}
+
+.theme-summer {
+  --steam-bg-color: #2d2314;
+  --steam-content-bg: rgba(45, 35, 20, 0.6);
+  --steam-border-color: #5c4a2e;
+  --steam-text-primary: #fdf1d4;
+  --steam-text-secondary: #c2a97a;
+  --steam-accent: #e6b85c;
+  --steam-header-bg: rgba(35, 25, 10, 0.8);
+}
+
+.theme-midnight {
+  --steam-bg-color: #0b101e;
+  --steam-content-bg: rgba(11, 16, 30, 0.6);
+  --steam-border-color: #1e2b4d;
+  --steam-text-primary: #e2e8f0;
+  --steam-text-secondary: #64748b;
+  --steam-accent: #3b82f6;
+  --steam-header-bg: rgba(5, 8, 15, 0.8);
+}
+
+.theme-steel {
+  --steam-bg-color: #232629;
+  --steam-content-bg: rgba(35, 38, 41, 0.6);
+  --steam-border-color: #4d545c;
+  --steam-text-primary: #f8f9fa;
+  --steam-text-secondary: #adb5bd;
+  --steam-accent: #4dabf7;
+  --steam-header-bg: rgba(25, 28, 31, 0.8);
+}
+
+.theme-cosmic {
+  --steam-bg-color: #1a0b2e;
+  --steam-content-bg: rgba(26, 11, 46, 0.6);
+  --steam-border-color: #4a1d7a;
+  --steam-text-primary: #f3e8ff;
+  --steam-text-secondary: #a855f7;
+  --steam-accent: #d946ef;
+  --steam-header-bg: rgba(15, 5, 25, 0.8);
+}
+
+.theme-dark {
+  --steam-bg-color: #000000;
+  --steam-content-bg: rgba(15, 15, 15, 0.8);
+  --steam-border-color: #222222;
+  --steam-text-primary: #ffffff;
+  --steam-text-secondary: #888888;
+  --steam-accent: #ffffff;
+  --steam-header-bg: rgba(5, 5, 5, 0.9);
+}
+
+.steam-profile-container {
+  font-family: "Motiva Sans", Arial, Helvetica, sans-serif;
+  background-color: var(--steam-bg-color);
+  color: var(--steam-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.steam-header {
+  background-color: var(--steam-header-bg);
+  backdrop-filter: blur(10px);
+  transition: background-color 0.3s ease;
+}
+
+.steam-content-box {
+  background-color: var(--steam-content-bg);
+  border: 1px solid var(--steam-border-color);
+  border-radius: 3px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.steam-text-muted {
+  color: var(--steam-text-secondary);
+  transition: color 0.3s ease;
+}
+
+.steam-link {
+  color: var(--steam-text-primary);
+  transition: color 0.3s ease;
+}
+.steam-link:hover {
+  color: var(--steam-accent);
+}

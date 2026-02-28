@@ -1,0 +1,14 @@
+name = "flexyart"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "dist"
+
+# D1 Database Binding
+[[d1_databases]]
+binding = "DB"
+database_name = "flexyart-db"
+database_id = "50400fd8-f18c-43c8-9009-cbffd91c370e"
+
+# R2 Bucket Binding
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "flexyart-storage"
