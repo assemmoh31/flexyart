@@ -16,25 +16,28 @@ import UploadPage from './pages/UploadPage';
 import CreatorStudio from './pages/CreatorStudio';
 import AdminDashboard from './pages/AdminDashboard';
 import BackgroundDetail from './pages/BackgroundDetail';
+import { ThemeProvider } from './context/ThemeContext';
 
 export default function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="marketplace" element={<Marketplace />} />
-          <Route path="artwork/:id" element={<ArtworkDetail />} />
-          <Route path="creator/:handle" element={<Profile />} />
-          <Route path="tools" element={<Tools />} />
-          <Route path="themes" element={<Themes />} />
-          <Route path="themes/:id" element={<BackgroundDetail />} />
-          <Route path="pricing" element={<Pricing />} />
-          <Route path="upload" element={<UploadPage />} />
-          <Route path="studio" element={<CreatorStudio />} />
-          <Route path="admin" element={<AdminDashboard />} />
-        </Route>
-      </Routes>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="marketplace" element={<Marketplace />} />
+            <Route path="artwork/:id" element={<ArtworkDetail />} />
+            <Route path="creator/:handle" element={<Profile />} />
+            <Route path="tools" element={<Tools />} />
+            <Route path="themes" element={<Themes />} />
+            <Route path="themes/:id" element={<BackgroundDetail />} />
+            <Route path="pricing" element={<Pricing />} />
+            <Route path="upload" element={<UploadPage />} />
+            <Route path="studio" element={<CreatorStudio />} />
+            <Route path="admin" element={<AdminDashboard />} />
+          </Route>
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 }

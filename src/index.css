@@ -1,24 +1,233 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
+:root {
+  /* Default Theme (Dark Slate & Neon) */
+  --bg-primary: #020617; /* slate-950 */
+  --bg-secondary: #0f172a; /* slate-900 */
+  --bg-tertiary: #1e293b; /* slate-800 */
+  
+  --accent-cyan-400: #22d3ee;
+  --accent-cyan-500: #06b6d4;
+  --accent-cyan-600: #0891b2;
+  
+  --accent-purple-400: #c084fc;
+  --accent-purple-500: #a855f7;
+}
+
+[data-theme="halloween"] {
+  /* Halloween Theme */
+  --bg-primary: #121212; /* Deep Charcoal */
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #2d2d2d;
+  
+  --accent-cyan-400: #FF8C00; /* Pumpkin Orange Lighter */
+  --accent-cyan-500: #FF7518; /* Pumpkin Orange */
+  --accent-cyan-600: #E66A15; /* Pumpkin Orange Darker */
+  
+  --accent-purple-400: #32CD32; /* Slime Green */
+  --accent-purple-500: #2E8B57; /* Sea Green */
+}
+
+[data-theme="christmas"] {
+  /* Christmas Theme - Midnight Winter Night */
+  --bg-primary: #0A0E14; /* Deep Navy */
+  --bg-secondary: rgba(15, 23, 42, 0.7); /* Frosted Glass Base */
+  --bg-tertiary: #1c2e52;
+  
+  --accent-cyan-400: #A5F3FC; /* Ice Blue */
+  --accent-cyan-500: #E2E8F0; /* Silver */
+  --accent-cyan-600: #22D3EE; /* Glowing Ice Blue */
+  
+  --accent-purple-400: #f87171; /* Candy Red Lighter */
+  --accent-purple-500: #EF4444; /* Vivid Candy-Red */
+}
+
+[data-theme="christmas"] .bg-slate-900,
+[data-theme="christmas"] .bg-slate-950,
+[data-theme="christmas"] .bg-slate-800 {
+  background-color: var(--bg-secondary) !important;
+  backdrop-filter: blur(20px) !important;
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="christmas"] .group:hover {
+  border-color: #22D3EE !important;
+  box-shadow: 0 0 15px rgba(34, 211, 238, 0.4) !important;
+}
+
+[data-theme="christmas"] .bg-cyan-500,
+[data-theme="christmas"] .bg-cyan-600 {
+  background-color: #EF4444 !important;
+}
+
+[data-theme="christmas"] .bg-cyan-500:hover,
+[data-theme="christmas"] .bg-cyan-600:hover {
+  background-color: #dc2626 !important;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.5) !important;
+}
+
+[data-theme="christmas"] .text-cyan-400,
+[data-theme="christmas"] .text-cyan-500 {
+  color: #A5F3FC !important;
+}
+
+/* Shimmer Animation for Hero Text */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+[data-theme="christmas"] .hero-shimmer {
+  background: linear-gradient(
+    to right,
+    #ffffff 20%,
+    #A5F3FC 40%,
+    #A5F3FC 60%,
+    #ffffff 80%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Christmas Light Progress Bar */
+[data-theme="christmas"] .progress-bar-fill {
+  background: linear-gradient(90deg, #EF4444, #22c55e, #3b82f6, #eab308, #EF4444);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  border-radius: 9999px;
+}
+
+[data-theme="valentine"] {
+  /* Valentine's Theme - Dreamy Pastel (Dark Mode Base) */
+  --bg-primary: #2D1B2D; /* Deep Plum */
+  --bg-secondary: rgba(45, 27, 45, 0.8); /* Semi-transparent Plum */
+  --bg-tertiary: #4A2C4A;
+  
+  --accent-cyan-400: #F48FB1; /* Pastel Pink */
+  --accent-cyan-500: #E29386; /* Rose Gold */
+  --accent-cyan-600: #B39DDB; /* Lavender */
+  
+  --accent-purple-400: #F8BBD0; /* Lighter Pink */
+  --accent-purple-500: #F48FB1; /* Pastel Pink */
+}
+
+[data-theme="valentine"] .bg-slate-900,
+[data-theme="valentine"] .bg-slate-950,
+[data-theme="valentine"] .bg-slate-800 {
+  background-color: var(--bg-secondary) !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 20px 40px rgba(244, 143, 177, 0.15) !important;
+  border: 2px dashed rgba(244, 143, 177, 0.3) !important; /* Scrapbook Borders */
+}
+
+/* Remove border radius override for specific elements if needed, but the prompt asks for main cards */
+[data-theme="valentine"] nav.bg-slate-950\/80 {
+  border-radius: 0 !important;
+  border-bottom: 2px dashed rgba(244, 143, 177, 0.3) !important;
+}
+
+[data-theme="valentine"] .group:hover {
+  border-color: #F48FB1 !important;
+  box-shadow: 0 0 25px rgba(244, 143, 177, 0.4) !important;
+}
+
+[data-theme="valentine"] .bg-cyan-500,
+[data-theme="valentine"] .bg-cyan-600 {
+  background-color: #F48FB1 !important;
+  border-radius: 9999px !important; /* Extra bubbly buttons */
+}
+
+[data-theme="valentine"] .bg-cyan-500:hover,
+[data-theme="valentine"] .bg-cyan-600:hover {
+  background-color: #E29386 !important;
+  box-shadow: 0 0 20px rgba(226, 147, 134, 0.5) !important;
+}
+
+[data-theme="valentine"] .text-cyan-400,
+[data-theme="valentine"] .text-cyan-500 {
+  color: #F48FB1 !important;
+}
+
+/* Bubbly Ripple Effect for Buttons */
+[data-theme="valentine"] button,
+[data-theme="valentine"] a.bg-cyan-500 {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="valentine"] button::after,
+[data-theme="valentine"] a.bg-cyan-500::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+[data-theme="valentine"] button:active::after,
+[data-theme="valentine"] a.bg-cyan-500:active::after {
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+  0% { transform: scale(0, 0); opacity: 0.5; }
+  20% { transform: scale(25, 25); opacity: 0.3; }
+  100% { opacity: 0; transform: scale(40, 40); }
+}
+
+/* Heart Pop Animation */
+@keyframes heart-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1.2); }
+}
+
+.heart-pop-active {
+  animation: heart-pop 0.3s forwards;
+  fill: #F48FB1;
+  color: #F48FB1;
+}
+
+[data-theme="halloween"] .bg-cyan-500:hover,
+[data-theme="halloween"] .bg-cyan-600:hover,
+[data-theme="halloween"] .bg-purple-500:hover,
+[data-theme="halloween"] .hover\:shadow-\[0_0_15px_rgba\(34\,211\,238\,0\.3\)\]:hover {
+  box-shadow: 0 0 20px #32CD32 !important;
+  border-color: #32CD32 !important;
+}
+
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   
-  --color-slate-950: #020617;
-  --color-slate-900: #0f172a;
-  --color-slate-800: #1e293b;
+  --color-slate-950: var(--bg-primary);
+  --color-slate-900: var(--bg-secondary);
+  --color-slate-800: var(--bg-tertiary);
   
-  --color-cyan-400: #22d3ee;
-  --color-cyan-500: #06b6d4;
+  --color-cyan-400: var(--accent-cyan-400);
+  --color-cyan-500: var(--accent-cyan-500);
+  --color-cyan-600: var(--accent-cyan-600);
   
-  --color-purple-400: #c084fc;
-  --color-purple-500: #a855f7;
+  --color-purple-400: var(--accent-purple-400);
+  --color-purple-500: var(--accent-purple-500);
 }
 
 body {
-  background-color: var(--color-slate-950);
+  background-color: var(--bg-primary);
   color: #f8fafc;
   font-family: var(--font-sans);
+  transition: background-color 0.5s ease;
 }
 
 /* Custom scrollbar for a premium feel */
@@ -27,14 +236,31 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-slate-950);
+  background: var(--bg-primary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-slate-800);
+  background: var(--bg-tertiary);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-slate-700);
+  background: #334155;
+}
+
+/* Halloween Particle Effects */
+.halloween-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 50;
+  overflow: hidden;
+}
+
+@keyframes drift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Star, TrendingUp, Users, Zap } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 const trendingArtworks = [
   { id: 1, title: 'Cyberpunk Neon City', creator: '@NeonDreams', price: '$15.00', image: 'https://picsum.photos/seed/cyber1/600/400', likes: 342, type: 'Animated' },
@@ -18,6 +19,8 @@ const topCreators = [
 ];
 
 export default function Home() {
+  const { activeTheme } = useTheme();
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -35,7 +38,7 @@ export default function Home() {
             <span>The #1 Marketplace for Steam Customization</span>
           </div>
           <h1 className="mx-auto max-w-4xl text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
-            Elevate Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Digital Identity</span>
+            <span className="hero-shimmer inline-block">Elevate Your</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Digital Identity</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400 leading-relaxed">
             Discover, buy, and sell premium custom Steam artworks, Workshop showcases, and profile themes. Join thousands of creators and collectors.
@@ -81,6 +84,27 @@ export default function Home() {
       {/* Trending Artworks Section */}
       <section className="py-20 bg-slate-950 border-t border-slate-900">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {activeTheme === 'valentine' && (
+            <div className="mb-12 bg-gradient-to-r from-pink-500/20 to-purple-500/20 border border-pink-500/30 rounded-2xl p-8 text-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/cherryblossom/1920/1080?blur=5')] opacity-20 mix-blend-overlay"></div>
+              <div className="relative z-10">
+                <h2 className="text-3xl font-extrabold text-white mb-4 flex items-center justify-center gap-3">
+                  <svg className="w-8 h-8 text-pink-400 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                  The Sweetheart Collection
+                  <svg className="w-8 h-8 text-pink-400 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                </h2>
+                <p className="text-pink-200 text-lg mb-6 max-w-2xl mx-auto">Discover our curated selection of romantic, pastel, and anime-inspired artworks perfect for the season of love.</p>
+                <Link to="/marketplace" className="inline-flex items-center gap-2 bg-pink-500 hover:bg-pink-400 text-white font-bold py-3 px-8 rounded-full transition-all shadow-[0_0_20px_rgba(244,143,177,0.4)] hover:scale-105">
+                  Shop the Collection
+                </Link>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center justify-between mb-12">
             <div>
               <h2 className="text-3xl font-bold text-white flex items-center gap-3">
@@ -156,10 +180,13 @@ export default function Home() {
             {topCreators.map((creator) => (
               <div key={creator.id} className="rounded-2xl bg-slate-950 border border-slate-800 p-6 text-center transition-all duration-300 hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/10">
                 <div className="relative mx-auto h-24 w-24 mb-4">
+                  {activeTheme === 'valentine' && (
+                    <div className="absolute -inset-2 rounded-full border-2 border-dashed border-pink-400/50 animate-[spin_10s_linear_infinite] pointer-events-none"></div>
+                  )}
                   <img 
                     src={creator.avatar} 
                     alt={creator.name} 
-                    className="h-full w-full rounded-full object-cover border-2 border-slate-800"
+                    className={`h-full w-full rounded-full object-cover border-2 ${activeTheme === 'valentine' ? 'border-pink-400 shadow-[0_0_15px_rgba(244,143,177,0.5)]' : 'border-slate-800'}`}
                     referrerPolicy="no-referrer"
                   />
                   <div className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 border border-slate-700 text-xs font-bold text-white">

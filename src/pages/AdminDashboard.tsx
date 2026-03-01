@@ -14,7 +14,8 @@ import {
   ChevronRight,
   MoreVertical,
   AlertTriangle,
-  Palette
+  Palette,
+  Calendar
 } from 'lucide-react';
 import { 
   LineChart, 
@@ -29,6 +30,7 @@ import {
 } from 'recharts';
 import CreatorBadge from '../components/CreatorBadge';
 import ThemeManager from '../components/admin/ThemeManager';
+import SeasonalThemeManager from '../components/admin/SeasonalThemeManager';
 
 // Mock Data for Analytics
 const salesDataRanges = {
@@ -136,6 +138,8 @@ export default function AdminDashboard() {
         return <UserManagementTab />;
       case 'themes':
         return <ThemeManager />;
+      case 'seasonal':
+        return <SeasonalThemeManager />;
       default:
         return <AnalyticsTab />;
     }
@@ -176,6 +180,12 @@ export default function AdminDashboard() {
             label="Theme Manager" 
             active={activeTab === 'themes'} 
             onClick={() => setActiveTab('themes')} 
+          />
+          <SidebarItem 
+            icon={<Calendar className="w-5 h-5" />} 
+            label="Seasonal Events" 
+            active={activeTab === 'seasonal'} 
+            onClick={() => setActiveTab('seasonal')} 
           />
         </nav>
       </aside>

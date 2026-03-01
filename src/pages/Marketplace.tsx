@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Filter, Search, ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { Filter, Search, ChevronDown, SlidersHorizontal, Snowflake, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CreatorBadge from '../components/CreatorBadge';
+import { useTheme } from '../context/ThemeContext';
 
 const artworks = [
   { id: 1, title: 'Cyberpunk Neon City', creator: '@NeonDreams', creatorRevenue: 3000, price: '$15.00', image: 'https://picsum.photos/seed/cyber1/600/400', type: 'Animated', category: 'Sci-Fi' },
@@ -17,6 +18,18 @@ const artworks = [
 
 export default function Marketplace() {
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const { activeTheme } = useTheme();
+  const [favorites, setFavorites] = useState<number[]>([]);
+
+  const toggleFavorite = (e: React.MouseEvent, id: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (favorites.includes(id)) {
+      setFavorites(favorites.filter(favId => favId !== id));
+    } else {
+      setFavorites([...favorites, id]);
+    }
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
@@ -27,7 +40,19 @@ export default function Marketplace() {
           <p className="text-slate-400 mt-2 text-lg">Discover the perfect artwork for your Steam profile.</p>
         </div>
         
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          {activeTheme === 'christmas' && (
+            <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-cyan-500/10 border border-cyan-500/50 text-cyan-400 font-medium hover:bg-cyan-500 hover:text-white transition-colors">
+              <Snowflake className="w-4 h-4" />
+              Winter Aesthetic
+            </button>
+          )}
+          {activeTheme === 'valentine' && (
+            <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-cyan-500/10 border border-cyan-500/50 text-cyan-400 font-medium hover:bg-cyan-500 hover:text-white transition-colors">
+              <Heart className="w-4 h-4 fill-current" />
+              The Sweetheart Collection
+            </button>
+          )}
           <div className="relative w-full md:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
             <input 
@@ -128,9 +153,17 @@ export default function Marketplace() {
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     referrerPolicy="no-referrer"
                   />
-                  <div className="absolute top-3 right-3 rounded-md bg-slate-950/80 backdrop-blur-md px-2.5 py-1 text-xs font-semibold text-white border border-slate-700">
+                  <div className="absolute top-3 right-3 rounded-md bg-slate-950/80 backdrop-blur-md px-2.5 py-1 text-xs font-semibold text-white border border-slate-700 z-10">
                     {artwork.type}
                   </div>
+                  {activeTheme === 'valentine' && (
+                    <button 
+                      onClick={(e) => toggleFavorite(e, artwork.id)}
+                      className="absolute top-3 left-3 z-10 p-2 rounded-full bg-slate-950/50 backdrop-blur-md border border-slate-700 hover:bg-slate-900 transition-colors"
+                    >
+                      <Heart className={`w-4 h-4 transition-all duration-300 ${favorites.includes(artwork.id) ? 'heart-pop-active' : 'text-slate-400 hover:text-pink-400'}`} />
+                    </button>
+                  )}
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
                     <button className="rounded-lg bg-cyan-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg hover:bg-cyan-400 transition-colors transform translate-y-4 group-hover:translate-y-0 duration-300">

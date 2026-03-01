@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, Search, ShoppingCart, User, X, LogOut, Upload, LayoutDashboard, Bell, CheckCircle, AlertTriangle, Wallet, ShieldAlert } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 type NotificationType = 'sale' | 'approval' | 'rejection' | 'withdrawal';
 
@@ -12,7 +13,16 @@ interface Notification {
   read: boolean;
 }
 
+const SantaHatSVG = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M374.9 146.4C366.1 113.8 340.2 86.8 307.3 76.5L289.4 70.9C247.7 57.9 203.8 78.4 186.2 119.1L156.4 187.9C151.7 198.8 142.1 206.5 130.5 208.7L96.3 215.2C72.2 219.8 54.8 240.8 54.8 265.3V272C54.8 298.5 76.3 320 102.8 320H409.2C435.7 320 457.2 298.5 457.2 272V265.3C457.2 240.8 439.8 219.8 415.7 215.2L381.5 208.7C369.9 206.5 360.3 198.8 355.6 187.9L374.9 146.4Z" fill="#EF4444"/>
+    <path d="M409.2 320H102.8C76.3 320 54.8 341.5 54.8 368C54.8 394.5 76.3 416 102.8 416H409.2C435.7 416 457.2 394.5 457.2 368C457.2 341.5 435.7 320 409.2 320Z" fill="#F8FAFC"/>
+    <circle cx="296" cy="72" r="48" fill="#F8FAFC"/>
+  </svg>
+);
+
 export default function Navbar() {
+  const { activeTheme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -111,8 +121,11 @@ export default function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-400 to-purple-500 text-white font-bold text-xl">
+            <Link to="/" className="flex items-center gap-2 relative">
+              {activeTheme === 'christmas' && (
+                <SantaHatSVG className="absolute -top-3 -left-2 w-6 h-6 z-10 -rotate-12" />
+              )}
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-400 to-purple-500 text-white font-bold text-xl relative">
                 F
               </div>
               <span className="text-xl font-bold tracking-tight text-white">
@@ -182,7 +195,44 @@ export default function Navbar() {
                       </div>
                       <div className="max-h-[400px] overflow-y-auto">
                         {notifications.length === 0 ? (
-                          <div className="px-4 py-8 text-center text-slate-500 text-sm">
+                          <div className="px-4 py-8 text-center text-slate-500 text-sm flex flex-col items-center justify-center">
+                            {activeTheme === 'valentine' ? (
+                              <svg className="w-16 h-16 mb-4 text-pink-400 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21.2 8.4c.5.38.8.97.8 1.6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V10a2 2 0 0 1 .8-1.6l8-6a2 2 0 0 1 2.4 0l8 6Z"/>
+                                <path d="m22 10-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 10"/>
+                                <path d="M12 14v.01"/>
+                                <path d="M12 10v.01"/>
+                                <path d="M12 18v.01"/>
+                                <path d="M12 6v.01"/>
+                                <path d="M12 2v.01"/>
+                                <path d="M12 22v.01"/>
+                                <path d="M16 14v.01"/>
+                                <path d="M8 14v.01"/>
+                                <path d="M16 10v.01"/>
+                                <path d="M8 10v.01"/>
+                                <path d="M16 18v.01"/>
+                                <path d="M8 18v.01"/>
+                                <path d="M16 6v.01"/>
+                                <path d="M8 6v.01"/>
+                                <path d="M16 2v.01"/>
+                                <path d="M8 2v.01"/>
+                                <path d="M16 22v.01"/>
+                                <path d="M8 22v.01"/>
+                                <path d="M20 14v.01"/>
+                                <path d="M4 14v.01"/>
+                                <path d="M20 10v.01"/>
+                                <path d="M4 10v.01"/>
+                                <path d="M20 18v.01"/>
+                                <path d="M4 18v.01"/>
+                                <path d="M20 6v.01"/>
+                                <path d="M4 6v.01"/>
+                                <path d="M20 2v.01"/>
+                                <path d="M4 2v.01"/>
+                                <path d="M20 22v.01"/>
+                                <path d="M4 22v.01"/>
+                                <path d="M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" fill="#F48FB1" stroke="none"/>
+                              </svg>
+                            ) : null}
                             No notifications yet.
                           </div>
                         ) : (
@@ -228,9 +278,12 @@ export default function Navbar() {
                 <div className="relative" ref={dropdownRef}>
                   <button 
                     onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                    className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-white transition-colors focus:outline-none"
+                    className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-white transition-colors focus:outline-none relative"
                   >
-                    <img src={user.avatar} alt={user.handle} className="h-8 w-8 rounded-full border border-slate-700" />
+                    {activeTheme === 'christmas' && (
+                      <SantaHatSVG className="absolute -top-3 -left-2 w-6 h-6 z-10 -rotate-12" />
+                    )}
+                    <img src={user.avatar} alt={user.handle} className="h-8 w-8 rounded-full border border-slate-700 relative" />
                     <span className="hidden sm:inline">{user.handle}</span>
                   </button>
 

@@ -12,10 +12,13 @@ import {
   Edit, 
   Trash2, 
   AlertCircle,
-  ChevronRight
+  ChevronRight,
+  Settings,
+  Snowflake
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CreatorBadge, { getCreatorLevel, getNextLevel } from '../components/CreatorBadge';
+import { useTheme } from '../context/ThemeContext';
 
 // Mock Data
 const stats = {
@@ -151,6 +154,7 @@ const SidebarItem = ({ icon, label, active, onClick }: { icon: React.ReactNode, 
 const OverviewTab = () => {
   const currentLevel = getCreatorLevel(stats.netRevenue);
   const nextLevel = getNextLevel(stats.netRevenue);
+  const { activeTheme } = useTheme();
   
   // Calculate progress percentage
   let progress = 0;
@@ -203,10 +207,10 @@ const OverviewTab = () => {
           
           <div className="h-3 w-full bg-slate-800 rounded-full overflow-hidden relative z-10">
             <div 
-              className="h-full bg-gradient-to-r from-cyan-500 to-purple-500 transition-all duration-1000 ease-out relative"
+              className={`h-full transition-all duration-1000 ease-out relative ${activeTheme === 'christmas' ? 'progress-bar-fill' : 'bg-gradient-to-r from-cyan-500 to-purple-500'}`}
               style={{ width: `${progress}%` }}
             >
-              <div className="absolute inset-0 bg-white/20 animate-[shimmer_2s_infinite]" />
+              {activeTheme !== 'christmas' && <div className="absolute inset-0 bg-white/20 animate-[shimmer_2s_infinite]" />}
             </div>
           </div>
         </div>
@@ -267,7 +271,10 @@ const StatCard = ({ title, value, icon, bg, border }: any) => (
   </div>
 );
 
-const ArtworksTab = () => (
+const ArtworksTab = () => {
+  const { activeTheme } = useTheme();
+  
+  return (
   <div className="space-y-6">
     <div className="flex items-center justify-between">
       <h2 className="text-2xl font-bold text-white">Manage Artworks</h2>
@@ -304,11 +311,18 @@ const ArtworksTab = () => (
                 <td className="px-6 py-4 text-slate-400 text-sm">{art.date}</td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <button className="p-2 text-slate-400 hover:text-cyan-400 transition-colors" title="Edit">
-                      <Edit className="w-4 h-4" />
+                    <button className="p-2 text-slate-400 hover:text-cyan-400 transition-colors" title="Settings">
+                      {activeTheme === 'christmas' ? <Snowflake className="w-4 h-4" /> : <Settings className="w-4 h-4" />}
                     </button>
                     <button className="p-2 text-slate-400 hover:text-red-400 transition-colors" title="Delete">
-                      <Trash2 className="w-4 h-4" />
+                      {activeTheme === 'christmas' ? (
+                        <div className="relative">
+                          <Trash2 className="w-4 h-4 text-cyan-200" />
+                          <div className="absolute inset-0 bg-white/30 blur-[1px] rounded-sm"></div>
+                        </div>
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
                     </button>
                   </div>
                 </td>
@@ -319,7 +333,8 @@ const ArtworksTab = () => (
       </div>
     </div>
   </div>
-);
+  );
+};
 
 const StatusBadge = ({ status, reason }: { status: string, reason?: string }) => {
   if (status === 'Live') {
