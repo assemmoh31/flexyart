@@ -444,7 +444,7 @@ export default function AdvancedCropper() {
       </div>
 
       {/* Control Panel (Design Studio) */}
-      <div className="w-80 bg-slate-900 border-l border-slate-800 flex flex-col z-30 shadow-2xl shrink-0">
+      <div className="w-80 bg-slate-900 border-l border-slate-800 flex flex-col z-30 shadow-2xl shrink-0 summer-gradient-panel">
         <div className="p-5 border-b border-slate-800 bg-slate-950">
           <h2 className="font-bold text-white flex items-center gap-2 text-lg">
             <Settings className="w-5 h-5 text-cyan-400" /> Design Studio

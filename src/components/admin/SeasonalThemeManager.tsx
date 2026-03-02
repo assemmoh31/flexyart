@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, Save, Check, Ghost, TreePine, Monitor, Heart } from 'lucide-react';
+import { Calendar, Clock, Save, Check, Ghost, TreePine, Monitor, Heart, Sun, Umbrella } from 'lucide-react';
 import { useTheme, SeasonalTheme } from '../../context/ThemeContext';
 
 export default function SeasonalThemeManager() {
@@ -75,6 +75,39 @@ export default function SeasonalThemeManager() {
           <div className="absolute bottom-4 right-6 animate-[float-up_4s_linear_infinite_1s]">
             <Heart className="w-6 h-6 text-[#F48FB1] fill-current opacity-30" />
           </div>
+        </div>
+      )
+    },
+    { 
+      id: 'lunar', 
+      name: 'Lunar New Year', 
+      icon: <Sun className="w-6 h-6" />, 
+      color: 'text-yellow-400', 
+      bg: 'bg-red-900/40 border-yellow-500/30',
+      preview: (
+        <div className="mt-4 p-3 rounded-lg bg-gradient-to-br from-[#4A0404] to-[#5C0505] border-2 border-transparent relative overflow-hidden h-24" style={{ backgroundImage: 'linear-gradient(#5C0505, #5C0505), repeating-linear-gradient(45deg, #FFC107 0, #FFC107 2px, transparent 2px, transparent 8px)', backgroundOrigin: 'border-box', backgroundClip: 'padding-box, border-box' }}>
+          <div className="absolute inset-0 bg-[#4A0404]/80"></div>
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 animate-[float-up_4s_linear_infinite]">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-[#D32F2F]">
+              <path d="M12 2C8 2 5 4 5 4V18C5 18 8 20 12 20C16 20 19 18 19 18V4C19 4 16 2 12 2Z" fill="currentColor" stroke="#FFC107" strokeWidth="1"/>
+              <path d="M12 2V20" stroke="#FFC107" strokeWidth="1" strokeDasharray="2 2"/>
+            </svg>
+          </div>
+        </div>
+      )
+    },
+    { 
+      id: 'summer', 
+      name: 'Summer Sale', 
+      icon: <Umbrella className="w-6 h-6" />, 
+      color: 'text-cyan-400', 
+      bg: 'bg-cyan-900/40 border-cyan-500/30',
+      preview: (
+        <div className="mt-4 p-3 rounded-lg bg-[#003135] border border-[#00BCD4]/30 relative overflow-hidden h-24">
+          <div className="absolute inset-0 bg-[rgba(0,188,212,0.1)] backdrop-blur-sm"></div>
+          <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-[#FFD700] blur-sm opacity-80 animate-pulse"></div>
+          <div className="absolute bottom-2 left-4 w-4 h-4 rounded-full bg-white opacity-40 animate-[float-up_3s_ease-in-out_infinite]"></div>
+          <div className="absolute bottom-4 right-8 w-6 h-6 rounded-full bg-white opacity-20 animate-[float-up_4s_ease-in-out_infinite_1s]"></div>
         </div>
       )
     },

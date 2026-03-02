@@ -239,22 +239,22 @@ export default function Navbar() {
                           notifications.map((notification) => (
                             <div 
                               key={notification.id}
-                              className={`px-4 py-3 hover:bg-slate-800/50 transition-colors border-b border-slate-800/50 last:border-0 ${!notification.read ? 'bg-slate-800/30' : ''}`}
+                              className={`px-4 py-3 hover:bg-slate-800/50 transition-colors border-b border-slate-800/50 last:border-0 ${!notification.read ? 'bg-slate-800/30' : ''} ${activeTheme === 'lunar' ? 'notification-hongbao m-2' : ''}`}
                             >
-                              <div className="flex gap-3">
-                                <div className={`mt-1 flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center border ${getNotificationColor(notification.type)}`}>
+                              <div className="flex gap-3 relative z-10">
+                                <div className={`mt-1 flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center border ${activeTheme === 'lunar' ? 'bg-[#FFC107]/20 border-[#FFC107]/50 text-[#FFC107]' : getNotificationColor(notification.type)}`}>
                                   {getNotificationIcon(notification.type)}
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-sm text-slate-200 leading-snug">
+                                  <p className={`text-sm leading-snug ${activeTheme === 'lunar' ? 'text-white' : 'text-slate-200'}`}>
                                     {notification.message}
                                   </p>
-                                  <p className="text-xs text-slate-500 mt-1">
+                                  <p className={`text-xs mt-1 ${activeTheme === 'lunar' ? 'text-[#FFC107]/80' : 'text-slate-500'}`}>
                                     {notification.time}
                                   </p>
                                 </div>
                                 {!notification.read && (
-                                  <div className="mt-2 h-1.5 w-1.5 rounded-full bg-cyan-500 flex-shrink-0"></div>
+                                  <div className={`mt-2 h-1.5 w-1.5 rounded-full flex-shrink-0 ${activeTheme === 'lunar' ? 'bg-[#FFC107]' : 'bg-cyan-500'}`}></div>
                                 )}
                               </div>
                             </div>

@@ -4,6 +4,9 @@ import Footer from './Footer';
 import HalloweenEffects from './HalloweenEffects';
 import ChristmasEffects from './ChristmasEffects';
 import ValentineEffects from './ValentineEffects';
+import LunarEffects from './LunarEffects';
+import CheckoutCelebration from './CheckoutCelebration';
+import SummerEffects from './SummerEffects';
 
 export default function Layout() {
   return (
@@ -11,6 +14,9 @@ export default function Layout() {
       <HalloweenEffects />
       <ChristmasEffects />
       <ValentineEffects />
+      <LunarEffects />
+      <SummerEffects />
+      <CheckoutCelebration />
       <Navbar />
       <main className="flex-1 relative z-10">
         <Outlet />

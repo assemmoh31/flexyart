@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Filter, Search, ChevronDown, SlidersHorizontal, Snowflake, Heart } from 'lucide-react';
+import { Filter, Search, ChevronDown, SlidersHorizontal, Snowflake, Heart, Sun } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CreatorBadge from '../components/CreatorBadge';
 import { useTheme } from '../context/ThemeContext';
@@ -31,6 +31,32 @@ export default function Marketplace() {
     }
   };
 
+  const handleCardHover = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (activeTheme === 'lunar') {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      // Create 3-5 particles
+      const numParticles = Math.floor(Math.random() * 3) + 3;
+      for (let i = 0; i < numParticles; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'gold-dust-particle';
+        const size = Math.random() * 4 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${x + (Math.random() * 40 - 20)}px`;
+        particle.style.top = `${y + (Math.random() * 40 - 20)}px`;
+        
+        e.currentTarget.appendChild(particle);
+        
+        setTimeout(() => {
+          particle.remove();
+        }, 1000);
+      }
+    }
+  };
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
       {/* Header */}
@@ -53,6 +79,12 @@ export default function Marketplace() {
               The Sweetheart Collection
             </button>
           )}
+          {activeTheme === 'lunar' && (
+            <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-cyan-500/10 border border-cyan-500/50 text-cyan-400 font-medium hover:bg-cyan-500 hover:text-white transition-colors">
+              <Sun className="w-4 h-4" />
+              The Fortune Collection
+            </button>
+          )}
           <div className="relative w-full md:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
             <input 
@@ -72,7 +104,7 @@ export default function Marketplace() {
 
       <div className="flex flex-col lg:flex-row gap-10">
         {/* Sidebar Filters */}
-        <aside className={`w-full lg:w-64 shrink-0 ${isMobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
+        <aside className={`w-full lg:w-64 shrink-0 p-6 rounded-2xl summer-gradient-panel ${isMobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
           <div className="sticky top-24 space-y-8">
             <div className="flex items-center gap-2 text-lg font-bold text-white border-b border-slate-800 pb-4">
               <Filter className="h-5 w-5 text-cyan-400" />
@@ -145,7 +177,12 @@ export default function Marketplace() {
           {/* Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
             {artworks.map((artwork) => (
-              <Link key={artwork.id} to={`/artwork/${artwork.id}`} className="group relative rounded-xl bg-slate-900 border border-slate-800 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 hover:border-slate-700 flex flex-col">
+              <Link 
+                key={artwork.id} 
+                to={`/artwork/${artwork.id}`} 
+                className="group relative rounded-xl bg-slate-900 border border-slate-800 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 hover:border-slate-700 flex flex-col"
+                onMouseEnter={handleCardHover}
+              >
                 <div className="aspect-[16/10] w-full overflow-hidden relative">
                   <img 
                     src={artwork.image} 
@@ -156,6 +193,11 @@ export default function Marketplace() {
                   <div className="absolute top-3 right-3 rounded-md bg-slate-950/80 backdrop-blur-md px-2.5 py-1 text-xs font-semibold text-white border border-slate-700 z-10">
                     {artwork.type}
                   </div>
+                  {activeTheme === 'summer' && (
+                    <div className="absolute top-3 left-3 z-10 sale-tag">
+                      SALE
+                    </div>
+                  )}
                   {activeTheme === 'valentine' && (
                     <button 
                       onClick={(e) => toggleFavorite(e, artwork.id)}
@@ -166,8 +208,15 @@ export default function Marketplace() {
                   )}
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
-                    <button className="rounded-lg bg-cyan-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg hover:bg-cyan-400 transition-colors transform translate-y-4 group-hover:translate-y-0 duration-300">
-                      View Details
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.dispatchEvent(new CustomEvent('checkout-success'));
+                      }}
+                      className="rounded-lg bg-cyan-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg hover:bg-cyan-400 transition-colors transform translate-y-4 group-hover:translate-y-0 duration-300"
+                    >
+                      {activeTheme === 'lunar' ? 'Buy Now' : 'View Details'}
                     </button>
                   </div>
                 </div>

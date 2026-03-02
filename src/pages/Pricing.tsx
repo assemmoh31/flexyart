@@ -2,11 +2,11 @@ import { Check, X, Zap } from 'lucide-react';
 
 const tiers = [
   {
-    name: 'Free',
-    id: 'tier-free',
+    name: 'Artist',
+    id: 'tier-artist',
     href: '#',
-    priceMonthly: '$0',
-    description: 'Perfect for casual users looking to buy artworks and use basic tools.',
+    priceMonthly: '$4.99',
+    description: 'Perfect for hobbyists starting their Steam design journey.',
     features: [
       'Access to all public artworks',
       'Basic profile cropper tool',
@@ -16,36 +16,36 @@ const tiers = [
       'No animated previews'
     ],
     featured: false,
-    cta: 'Get Started',
+    cta: 'Select',
   },
   {
-    name: 'Pro Creator',
-    id: 'tier-pro',
+    name: 'Creator',
+    id: 'tier-creator',
     href: '#',
     priceMonthly: '$9.99',
-    description: 'Everything you need to start selling your custom Steam artworks.',
+    description: 'Everything you need to build a serious design business.',
     features: [
       'List up to 50 artworks per month',
       'Advanced background splitter tool',
-      'Priority support',
+      'Standard support',
       'Reduced 2.5% transaction fee',
       'Animated live previews',
       'Custom creator profile page',
       'Analytics dashboard'
     ],
     featured: true,
-    cta: 'Start 14-Day Free Trial',
+    cta: 'Select',
   },
   {
-    name: 'Premium Agency',
-    id: 'tier-agency',
+    name: 'Elite',
+    id: 'tier-elite',
     href: '#',
-    priceMonthly: '$29.99',
-    description: 'For established artists and teams managing multiple profiles.',
+    priceMonthly: '$19.99',
+    description: 'For top-tier studios and high-volume sellers.',
     features: [
       'Unlimited artwork listings',
       'All premium creator tools',
-      '24/7 dedicated support',
+      'Priority support',
       '0% transaction fee',
       'Featured listings on homepage',
       'Custom domain for portfolio',
@@ -53,7 +53,7 @@ const tiers = [
       'API access'
     ],
     featured: false,
-    cta: 'Contact Sales',
+    cta: 'Select',
   },
 ];
 
@@ -62,7 +62,7 @@ export default function Pricing() {
     <div className="bg-slate-950 py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="text-base font-semibold leading-7 text-cyan-400">Pricing</h2>
+          <h2 className="text-base font-semibold leading-7 text-[#00BCD4]">Pricing</h2>
           <p className="mt-2 text-4xl font-bold tracking-tight text-white sm:text-5xl">
             Choose the right plan for your creative journey
           </p>
@@ -78,12 +78,12 @@ export default function Pricing() {
                 key={tier.id}
                 className={`rounded-3xl p-8 ring-1 xl:p-10 flex flex-col justify-between ${
                   tier.featured
-                    ? 'bg-slate-900 ring-cyan-500 shadow-2xl shadow-cyan-500/20 relative scale-105 z-10'
+                    ? 'bg-slate-900 ring-[#00BCD4] shadow-2xl shadow-[#00BCD4]/20 relative scale-105 z-10'
                     : 'bg-slate-900/50 ring-slate-800 hover:bg-slate-900 transition-colors'
                 }`}
               >
                 {tier.featured && (
-                  <div className="absolute -top-5 left-0 right-0 mx-auto w-32 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 px-3 py-1 text-center text-sm font-semibold text-white shadow-sm">
+                  <div className="absolute -top-5 left-0 right-0 mx-auto w-32 rounded-full bg-gradient-to-r from-[#00BCD4] to-[#00796B] px-3 py-1 text-center text-sm font-bold text-white shadow-[0_0_10px_rgba(0,188,212,0.5)]">
                     Most Popular
                   </div>
                 )}
@@ -92,7 +92,7 @@ export default function Pricing() {
                     <h3
                       id={tier.id}
                       className={`text-lg font-semibold leading-8 ${
-                        tier.featured ? 'text-cyan-400' : 'text-white'
+                        tier.featured ? 'text-[#00BCD4]' : 'text-white'
                       }`}
                     >
                       {tier.name}
@@ -109,7 +109,7 @@ export default function Pricing() {
                         {feature.startsWith('Cannot') || feature.startsWith('No') ? (
                           <X className="h-6 w-5 flex-none text-slate-600" aria-hidden="true" />
                         ) : (
-                          <Check className={`h-6 w-5 flex-none ${tier.featured ? 'text-cyan-400' : 'text-purple-400'}`} aria-hidden="true" />
+                          <Check className={`h-6 w-5 flex-none ${tier.featured ? 'text-[#00BCD4]' : 'text-[#00BCD4]/70'}`} aria-hidden="true" />
                         )}
                         <span className={feature.startsWith('Cannot') || feature.startsWith('No') ? 'text-slate-500' : ''}>
                           {feature}
@@ -121,10 +121,10 @@ export default function Pricing() {
                 <a
                   href={tier.href}
                   aria-describedby={tier.id}
-                  className={`mt-8 block rounded-md px-3 py-2 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-all ${
+                  className={`mt-8 block rounded-md px-3 py-2 text-center text-sm font-bold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-all ${
                     tier.featured
-                      ? 'bg-cyan-500 text-white hover:bg-cyan-400 focus-visible:outline-cyan-500 shadow-lg shadow-cyan-500/30'
-                      : 'bg-slate-800 text-white hover:bg-slate-700 focus-visible:outline-slate-800'
+                      ? 'bg-[#00BCD4] text-slate-950 hover:bg-[#00BCD4]/90 focus-visible:outline-[#00BCD4] shadow-[0_0_15px_rgba(0,188,212,0.5)]'
+                      : 'bg-slate-800 text-white hover:bg-slate-700 focus-visible:outline-slate-800 border border-slate-700 hover:border-[#00BCD4]/50 hover:text-[#00BCD4]'
                   }`}
                 >
                   {tier.cta}

@@ -200,6 +200,216 @@
   color: #F48FB1;
 }
 
+[data-theme="lunar"] {
+  /* Lunar New Year Theme - Imperial Fortune */
+  --bg-primary: #4A0404; /* Deep Burgundy */
+  --bg-secondary: #5C0505; /* Slightly lighter Burgundy */
+  --bg-tertiary: #730606;
+  
+  --accent-cyan-400: #FFC107; /* Bright Gold */
+  --accent-cyan-500: #D32F2F; /* Rich Imperial Red */
+  --accent-cyan-600: #B71C1C; /* Darker Red */
+  
+  --accent-purple-400: #FFD54F; /* Lighter Gold */
+  --accent-purple-500: #FFC107; /* Bright Gold */
+}
+
+[data-theme="lunar"] .bg-slate-900,
+[data-theme="lunar"] .bg-slate-950,
+[data-theme="lunar"] .bg-slate-800 {
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%) !important;
+  border-color: rgba(255, 193, 7, 0.3) !important;
+}
+
+/* Silk Texture for main background */
+[data-theme="lunar"] body {
+  background: linear-gradient(135deg, #3E0303 0%, #4A0404 100%) !important;
+}
+
+[data-theme="lunar"] .text-cyan-400,
+[data-theme="lunar"] .text-cyan-500 {
+  color: #FFC107 !important;
+}
+
+[data-theme="lunar"] .bg-cyan-500,
+[data-theme="lunar"] .bg-cyan-600 {
+  background-color: #FFC107 !important;
+  color: #4A0404 !important;
+  font-weight: bold !important;
+}
+
+[data-theme="lunar"] .bg-cyan-500:hover,
+[data-theme="lunar"] .bg-cyan-600:hover {
+  background-color: #FFD54F !important;
+  box-shadow: 0 0 15px rgba(255, 193, 7, 0.5) !important;
+}
+
+/* Traditional Borders for Artwork Cards */
+[data-theme="lunar"] .group.relative.rounded-2xl {
+  border: 2px solid transparent;
+  background-image: linear-gradient(var(--bg-secondary), var(--bg-secondary)), 
+                    repeating-linear-gradient(45deg, #FFC107 0, #FFC107 2px, transparent 2px, transparent 8px);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* Golden Aura Hover */
+[data-theme="lunar"] .group:hover {
+  border-color: #FFC107 !important;
+  box-shadow: 0 0 20px rgba(255, 193, 7, 0.8) !important;
+}
+
+/* Hongbao Notification */
+[data-theme="lunar"] .notification-hongbao {
+  background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%) !important;
+  border: 2px solid #FFC107 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 193, 7, 0.2) !important;
+  color: #FFC107 !important;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="lunar"] .notification-hongbao::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120%;
+  height: 40px;
+  background: #B71C1C;
+  border-bottom: 2px solid #FFC107;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+[data-theme="lunar"] .notification-hongbao > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Gold Dust Particle Effect */
+@keyframes gold-dust {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-50px) scale(0); opacity: 0; }
+}
+
+.gold-dust-particle {
+  position: absolute;
+  background-color: #FFC107;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: gold-dust 1s ease-out forwards;
+}
+
+[data-theme="summer"] {
+  /* Summer Sale Theme - Tropical Paradise */
+  --bg-primary: #003135; /* Deep Ocean Blue */
+  --bg-secondary: #004A4F; /* Lighter Ocean Blue */
+  --bg-tertiary: #00636A;
+  
+  --accent-cyan-400: #00BCD4; /* Tropical Cyan */
+  --accent-cyan-500: #0097A7; /* Darker Cyan */
+  --accent-cyan-600: #00796B; /* Deep Teal */
+  
+  --accent-purple-400: #FFD700; /* Sunny Yellow */
+  --accent-purple-500: #FFC107; /* Amber */
+}
+
+[data-theme="summer"] .bg-slate-900,
+[data-theme="summer"] .bg-slate-950,
+[data-theme="summer"] .bg-slate-800 {
+  background: rgba(0, 188, 212, 0.1) !important;
+  backdrop-filter: blur(8px) !important;
+  border-color: rgba(0, 188, 212, 0.3) !important;
+}
+
+[data-theme="summer"] .summer-gradient-panel {
+  background: linear-gradient(180deg, #00BCD4 0%, #00796B 100%) !important;
+  backdrop-filter: blur(12px) !important;
+  border-color: rgba(0, 188, 212, 0.4) !important;
+}
+
+/* Base background */
+[data-theme="summer"] body {
+  background-color: var(--bg-primary) !important;
+}
+
+[data-theme="summer"] .text-cyan-400,
+[data-theme="summer"] .text-cyan-500 {
+  color: #00BCD4 !important;
+}
+
+/* Sunny Yellow Action Buttons */
+[data-theme="summer"] .bg-cyan-500,
+[data-theme="summer"] .bg-cyan-600 {
+  background-color: #FFD700 !important;
+  color: #003135 !important;
+  font-weight: bold !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Sand Texture for Buttons */
+[data-theme="summer"] .bg-cyan-500::before,
+[data-theme="summer"] .bg-cyan-600::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+[data-theme="summer"] .bg-cyan-500:hover,
+[data-theme="summer"] .bg-cyan-600:hover {
+  background-color: #FFC107 !important;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5) !important;
+}
+
+/* Heatwave Shimmer Effect */
+@keyframes heatwave-shimmer {
+  0% { transform: translateY(0) scale(1); filter: blur(0px); }
+  50% { transform: translateY(-2px) scale(1.01); filter: blur(0.5px); }
+  100% { transform: translateY(0) scale(1); filter: blur(0px); }
+}
+
+[data-theme="summer"] .heatwave-card {
+  animation: heatwave-shimmer 3s ease-in-out infinite;
+}
+
+/* Surfboard Sale Tag */
+[data-theme="summer"] .sale-tag {
+  background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%) !important;
+  color: #003135 !important;
+  border-radius: 50% 50% 50% 50% / 10% 10% 90% 90% !important;
+  padding: 4px 12px !important;
+  font-weight: bold !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Beach Ball Loader */
+@keyframes beachball-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes beachball-bounce {
+  0%, 100% { transform: translateY(0) scaleY(1) rotate(0deg); }
+  50% { transform: translateY(-20px) scaleY(1.05) rotate(180deg); }
+}
+
+[data-theme="summer"] .animate-spin {
+  animation: beachball-bounce 1s ease-in-out infinite !important;
+  border-color: #FFD700 !important;
+  border-top-color: #00BCD4 !important;
+  border-right-color: #FF8C00 !important;
+  border-bottom-color: #FFD700 !important;
+  border-left-color: #00BCD4 !important;
+}
+
 [data-theme="halloween"] .bg-cyan-500:hover,
 [data-theme="halloween"] .bg-cyan-600:hover,
 [data-theme="halloween"] .bg-purple-500:hover,

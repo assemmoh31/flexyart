@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Star, TrendingUp, Users, Zap } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import WaveDivider from '../components/WaveDivider';
 
 const trendingArtworks = [
   { id: 1, title: 'Cyberpunk Neon City', creator: '@NeonDreams', price: '$15.00', image: 'https://picsum.photos/seed/cyber1/600/400', likes: 342, type: 'Animated' },
@@ -81,6 +82,8 @@ export default function Home() {
         </div>
       </section>
 
+      <WaveDivider />
+
       {/* Trending Artworks Section */}
       <section className="py-20 bg-slate-950 border-t border-slate-900">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -109,7 +112,7 @@ export default function Home() {
             <div>
               <h2 className="text-3xl font-bold text-white flex items-center gap-3">
                 <TrendingUp className="h-8 w-8 text-cyan-400" />
-                Trending Artworks
+                {activeTheme === 'summer' ? 'Summer Heatwave' : 'Trending Artworks'}
               </h2>
               <p className="text-slate-400 mt-2">The most popular showcases this week.</p>
             </div>
@@ -120,7 +123,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {trendingArtworks.map((artwork) => (
-              <div key={artwork.id} className="group relative rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-cyan-500/10 hover:border-slate-700">
+              <div key={artwork.id} className={`group relative rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-cyan-500/10 hover:border-slate-700 ${activeTheme === 'summer' ? 'heatwave-card' : ''}`}>
                 <div className="aspect-video w-full overflow-hidden relative">
                   <img 
                     src={artwork.image} 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Award, Shield, Zap, Crown, Star } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 interface CreatorBadgeProps {
   totalRevenue: number;
@@ -25,6 +26,7 @@ export const getNextLevel = (revenue: number) => {
 };
 
 export default function CreatorBadge({ totalRevenue, size = 'md' }: CreatorBadgeProps) {
+  const { activeTheme } = useTheme();
   const levelData = getCreatorLevel(totalRevenue);
 
   if (!levelData) return null;
@@ -43,6 +45,29 @@ export default function CreatorBadge({ totalRevenue, size = 'md' }: CreatorBadge
   };
 
   const isLegend = levelData.level === 5;
+
+  if (activeTheme === 'lunar') {
+    return (
+      <div className="group relative inline-flex items-center">
+        <div 
+          className={`
+            ${containerClasses[size]} rounded-full border-2 border-[#FFC107] bg-gradient-to-br from-[#FFD54F] to-[#FFC107] text-[#4A0404]
+            ${isLegend ? 'animate-pulse shadow-[0_0_15px_rgba(255,193,7,0.8)]' : 'shadow-[0_0_5px_rgba(255,193,7,0.4)]'}
+            relative overflow-hidden flex items-center justify-center
+          `}
+        >
+          {/* Square hole in the middle for traditional coin look */}
+          <div className="absolute w-1/3 h-1/3 bg-[#4A0404] border border-[#B71C1C] rounded-sm"></div>
+          {isLegend && (
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
+          )}
+          <div className="relative z-10 opacity-80 mix-blend-overlay">
+            <Icon className={sizeClasses[size]} />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="group relative inline-flex items-center">

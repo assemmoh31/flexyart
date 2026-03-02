@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type SeasonalTheme = 'default' | 'halloween' | 'christmas' | 'valentine';
+export type SeasonalTheme = 'default' | 'halloween' | 'christmas' | 'valentine' | 'lunar' | 'summer';
 
 interface ThemeContextType {
   theme: SeasonalTheme;
