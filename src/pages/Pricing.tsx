@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Check, X, Zap } from 'lucide-react';
 
 const tiers = [
@@ -6,6 +7,8 @@ const tiers = [
     id: 'tier-artist',
     href: '#',
     priceMonthly: '$4.99',
+    priceYearly: '$49.99',
+    savings: 'Save $9.89',
     description: 'Perfect for hobbyists starting their Steam design journey.',
     features: [
       'Access to all public artworks',
@@ -23,6 +26,8 @@ const tiers = [
     id: 'tier-creator',
     href: '#',
     priceMonthly: '$9.99',
+    priceYearly: '$99.99',
+    savings: 'Save $19.89',
     description: 'Everything you need to build a serious design business.',
     features: [
       'List up to 50 artworks per month',
@@ -41,6 +46,8 @@ const tiers = [
     id: 'tier-elite',
     href: '#',
     priceMonthly: '$19.99',
+    priceYearly: '$199.99',
+    savings: 'Save $39.89',
     description: 'For top-tier studios and high-volume sellers.',
     features: [
       'Unlimited artwork listings',
@@ -58,6 +65,8 @@ const tiers = [
 ];
 
 export default function Pricing() {
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+
   return (
     <div className="bg-slate-950 py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -71,12 +80,49 @@ export default function Pricing() {
           Whether you're just browsing for a new profile look or building a business selling custom themes, we have a plan tailored for you.
         </p>
         
+        {/* Billing Toggle */}
         <div className="mt-16 flex justify-center">
+          <div className="relative flex items-center p-1 bg-slate-900 rounded-full border border-slate-800">
+            <button
+              onClick={() => setBillingCycle('monthly')}
+              className={`relative z-10 px-6 py-2 text-sm font-bold rounded-full transition-colors duration-300 ${
+                billingCycle === 'monthly' ? 'text-white' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingCycle('yearly')}
+              className={`relative z-10 px-6 py-2 text-sm font-bold rounded-full transition-colors duration-300 ${
+                billingCycle === 'yearly' ? 'text-white' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Yearly
+            </button>
+            <div
+              className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-[#00BCD4] rounded-full transition-transform duration-300 ease-in-out ${
+                billingCycle === 'yearly' ? 'translate-x-full' : 'translate-x-0'
+              }`}
+            ></div>
+            
+            {/* Savings Badge */}
+             <div className="absolute -right-32 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-2">
+                <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#00BCD4] rotate-180" fill="none" stroke="currentColor">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span className="inline-flex items-center rounded-full bg-[#00BCD4]/10 px-2 py-1 text-xs font-bold text-[#00BCD4] ring-1 ring-inset ring-[#00BCD4]/20 animate-pulse whitespace-nowrap">
+                  Save ~17%
+                </span>
+             </div>
+          </div>
+        </div>
+        
+        <div className="mt-10 flex justify-center">
           <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 lg:grid-cols-3 sm:gap-x-8">
             {tiers.map((tier) => (
               <div
                 key={tier.id}
-                className={`rounded-3xl p-8 ring-1 xl:p-10 flex flex-col justify-between ${
+                className={`rounded-3xl p-8 ring-1 xl:p-10 flex flex-col justify-between transition-all duration-300 ${
                   tier.featured
                     ? 'bg-slate-900 ring-[#00BCD4] shadow-2xl shadow-[#00BCD4]/20 relative scale-105 z-10'
                     : 'bg-slate-900/50 ring-slate-800 hover:bg-slate-900 transition-colors'
@@ -87,6 +133,16 @@ export default function Pricing() {
                     Most Popular
                   </div>
                 )}
+                
+                {/* Yearly Badge */}
+                 {billingCycle === 'yearly' && (
+                  <div className="absolute top-4 right-4">
+                    <span className="inline-flex items-center rounded-md bg-[#00BCD4]/10 px-2 py-1 text-xs font-bold text-[#00BCD4] ring-1 ring-inset ring-[#00BCD4]/20">
+                      BEST VALUE
+                    </span>
+                  </div>
+                )}
+
                 <div>
                   <div className="flex items-center justify-between gap-x-4">
                     <h3
@@ -100,9 +156,22 @@ export default function Pricing() {
                   </div>
                   <p className="mt-4 text-sm leading-6 text-slate-400">{tier.description}</p>
                   <p className="mt-6 flex items-baseline gap-x-1">
-                    <span className="text-4xl font-bold tracking-tight text-white">{tier.priceMonthly}</span>
-                    <span className="text-sm font-semibold leading-6 text-slate-400">/month</span>
+                    <span className="text-4xl font-bold tracking-tight text-white transition-all duration-300">
+                        {billingCycle === 'monthly' ? tier.priceMonthly : tier.priceYearly}
+                    </span>
+                    <span className="text-sm font-semibold leading-6 text-slate-400">
+                        /{billingCycle === 'monthly' ? 'month' : 'year'}
+                    </span>
                   </p>
+                  {billingCycle === 'yearly' ? (
+                      <p className="mt-1 text-sm font-bold text-[#00BCD4] animate-pulse">
+                          {tier.savings}
+                      </p>
+                  ) : (
+                    <p className="mt-1 text-sm font-bold text-transparent select-none">
+                      &nbsp;
+                    </p>
+                  )}
                   <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-slate-300">
                     {tier.features.map((feature) => (
                       <li key={feature} className="flex gap-x-3">

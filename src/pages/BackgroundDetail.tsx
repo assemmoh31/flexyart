@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Download, Star, ShieldCheck, Gamepad2, Maximize2, ExternalLink } from 'lucide-react';
-import { SteamPointsIcon } from './Themes';
+import { SteamPointsIcon } from '../components/SteamPointsIcon';
 
 // Mock data for the details page
 const themeDetails = {

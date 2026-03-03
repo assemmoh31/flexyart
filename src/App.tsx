@@ -11,11 +11,12 @@ import Tools from './pages/Tools';
 import Themes from './pages/Themes';
 import Pricing from './pages/Pricing';
 import ArtworkDetail from './pages/ArtworkDetail';
-import Profile from './pages/Profile';
+import ProfileEditor from './pages/ProfileEditor';
 import UploadPage from './pages/UploadPage';
 import CreatorStudio from './pages/CreatorStudio';
 import AdminDashboard from './pages/AdminDashboard';
 import BackgroundDetail from './pages/BackgroundDetail';
+import Activity from './pages/Activity';
 import { ThemeProvider } from './context/ThemeContext';
 
 export default function App() {
@@ -27,7 +28,7 @@ export default function App() {
             <Route index element={<Home />} />
             <Route path="marketplace" element={<Marketplace />} />
             <Route path="artwork/:id" element={<ArtworkDetail />} />
-            <Route path="creator/:handle" element={<Profile />} />
+            <Route path="creator/:handle" element={<ProfileEditor />} />
             <Route path="tools" element={<Tools />} />
             <Route path="themes" element={<Themes />} />
             <Route path="themes/:id" element={<BackgroundDetail />} />
@@ -35,6 +36,7 @@ export default function App() {
             <Route path="upload" element={<UploadPage />} />
             <Route path="studio" element={<CreatorStudio />} />
             <Route path="admin" element={<AdminDashboard />} />
+            <Route path="activity" element={<Activity />} />
           </Route>
         </Routes>
       </Router>

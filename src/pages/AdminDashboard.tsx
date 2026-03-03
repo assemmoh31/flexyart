@@ -15,7 +15,8 @@ import {
   MoreVertical,
   AlertTriangle,
   Palette,
-  Calendar
+  Calendar,
+  DollarSign
 } from 'lucide-react';
 import { 
   LineChart, 
@@ -31,6 +32,7 @@ import {
 import CreatorBadge from '../components/CreatorBadge';
 import ThemeManager from '../components/admin/ThemeManager';
 import SeasonalThemeManager from '../components/admin/SeasonalThemeManager';
+import RevenueDashboard from '../components/admin/RevenueDashboard';
 
 // Mock Data for Analytics
 const salesDataRanges = {
@@ -132,6 +134,8 @@ export default function AdminDashboard() {
     switch (activeTab) {
       case 'analytics':
         return <AnalyticsTab />;
+      case 'revenue':
+        return <RevenueDashboard />;
       case 'moderation':
         return <ModerationTab />;
       case 'users':
@@ -161,6 +165,12 @@ export default function AdminDashboard() {
             label="Analytics" 
             active={activeTab === 'analytics'} 
             onClick={() => setActiveTab('analytics')} 
+          />
+          <SidebarItem 
+            icon={<DollarSign className="w-5 h-5" />} 
+            label="Revenue & Finance" 
+            active={activeTab === 'revenue'} 
+            onClick={() => setActiveTab('revenue')} 
           />
           <SidebarItem 
             icon={<ShieldAlert className="w-5 h-5" />} 
@@ -203,7 +213,7 @@ const SidebarItem = ({ icon, label, active, onClick, badge }: { icon: React.Reac
     onClick={onClick}
     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
       active 
-        ? 'bg-red-500/10 text-red-400 border border-red-500/20' 
+        ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20' 
         : 'text-slate-400 hover:bg-slate-800 hover:text-white'
     }`}
   >
