@@ -7,6 +7,7 @@ import ValentineEffects from './ValentineEffects';
 import LunarEffects from './LunarEffects';
 import CheckoutCelebration from './CheckoutCelebration';
 import SummerEffects from './SummerEffects';
+import SpringEffects from './SpringEffects';
 
 export default function Layout() {
   return (
@@ -16,6 +17,7 @@ export default function Layout() {
       <ValentineEffects />
       <LunarEffects />
       <SummerEffects />
+      <SpringEffects />
       <CheckoutCelebration />
       <Navbar />
       <main className="flex-1 relative z-10">

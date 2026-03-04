@@ -14,11 +14,13 @@ import {
   AlertCircle,
   ChevronRight,
   Settings,
-  Snowflake
+  Snowflake,
+  Tag
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CreatorBadge, { getCreatorLevel, getNextLevel } from '../components/CreatorBadge';
 import { useTheme } from '../context/ThemeContext';
+import SalesPromotionsTab from '../components/creator/SalesPromotionsTab';
 
 // Mock Data
 const stats = {
@@ -85,6 +87,8 @@ export default function CreatorStudio() {
         return <SalesTab />;
       case 'payouts':
         return <PayoutsTab />;
+      case 'promotions':
+        return <SalesPromotionsTab />;
       default:
         return <OverviewTab />;
     }
@@ -112,6 +116,12 @@ export default function CreatorStudio() {
             label="My Artworks" 
             active={activeTab === 'artworks'} 
             onClick={() => setActiveTab('artworks')} 
+          />
+          <SidebarItem 
+            icon={<Tag className="w-5 h-5" />} 
+            label="Sales & Promotions" 
+            active={activeTab === 'promotions'} 
+            onClick={() => setActiveTab('promotions')} 
           />
           <SidebarItem 
             icon={<Clock className="w-5 h-5" />} 

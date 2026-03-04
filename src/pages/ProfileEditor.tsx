@@ -198,54 +198,6 @@ export default function ProfileEditor() {
                   </div>
                 </div>
 
-                {/* Modular Content Blocks */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-                  {/* About the Artist */}
-                  <div className={`lg:col-span-2 p-6 rounded-2xl bg-slate-900/80 backdrop-blur-md border border-slate-800 relative overflow-hidden ${textureOverlay !== 'none' ? `texture-${textureOverlay}` : ''}`}>
-                    <h3 className="text-lg font-bold mb-4 flex items-center gap-2" style={{ color: 'var(--profile-text)' }}>
-                      <Type className="w-5 h-5" style={{ color: 'var(--profile-theme)' }} /> About the Artist
-                    </h3>
-                    <p className="text-slate-300 leading-relaxed text-lg font-serif">
-                      {bioText}
-                    </p>
-                    <div className="flex items-center gap-4 mt-6 text-sm text-slate-400">
-                      <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {creatorData.location}</span>
-                      <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> Joined {creatorData.memberSince}</span>
-                    </div>
-                  </div>
-
-                  {/* Social Proof Widget */}
-                  <div className={`p-6 rounded-2xl bg-slate-900/80 backdrop-blur-md border border-slate-800 relative overflow-hidden ${textureOverlay !== 'none' ? `texture-${textureOverlay}` : ''}`}>
-                    <h3 className="text-lg font-bold mb-4 flex items-center gap-2" style={{ color: 'var(--profile-text)' }}>
-                      <Star className="w-5 h-5" style={{ color: 'var(--profile-theme)' }} /> Social Proof
-                    </h3>
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-950/50 border border-slate-800">
-                        <div className="w-10 h-10 rounded-full bg-slate-800 overflow-hidden shrink-0">
-                          <img src="https://picsum.photos/seed/user2/100/100" alt="User" />
-                        </div>
-                        <div>
-                          <div className="flex text-yellow-400 text-xs mb-1">
-                            <Star className="w-3 h-3 fill-current" /><Star className="w-3 h-3 fill-current" /><Star className="w-3 h-3 fill-current" /><Star className="w-3 h-3 fill-current" /><Star className="w-3 h-3 fill-current" />
-                          </div>
-                          <p className="text-xs text-slate-300 line-clamp-2">"Amazing quality! The neon animations are perfectly looped."</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-950/50 border border-slate-800">
-                        <div className="w-10 h-10 rounded-full bg-slate-800 overflow-hidden shrink-0">
-                          <img src="https://picsum.photos/seed/user3/100/100" alt="User" />
-                        </div>
-                        <div>
-                          <div className="flex text-yellow-400 text-xs mb-1">
-                            <Star className="w-3 h-3 fill-current" /><Star className="w-3 h-3 fill-current" /><Star className="w-3 h-3 fill-current" /><Star className="w-3 h-3 fill-current" /><Star className="w-3 h-3 fill-current" />
-                          </div>
-                          <p className="text-xs text-slate-300 line-clamp-2">"Best cyberpunk themes on the marketplace."</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 {/* Profile Navigation */}
                 <div className="border-b border-slate-800 mb-8">
                   <nav className="flex space-x-8">

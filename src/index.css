@@ -410,6 +410,67 @@
   border-left-color: #00BCD4 !important;
 }
 
+[data-theme="spring"] {
+  /* Spring Bloom Theme */
+  --bg-primary: #0A1A10; /* Deep Forest Green */
+  --bg-secondary: #122B1A; /* Dark Green */
+  --bg-tertiary: #1A3C24;
+  
+  --accent-cyan-400: #81C784; /* Soft Green */
+  --accent-cyan-500: #66BB6A; /* Spring Green */
+  --accent-cyan-600: #4CAF50; /* Leaf Green */
+  
+  --accent-purple-400: #FFF59D; /* Light Pastel Yellow */
+  --accent-purple-500: #FFF176; /* Pastel Yellow */
+}
+
+[data-theme="spring"] .bg-slate-900,
+[data-theme="spring"] .bg-slate-950,
+[data-theme="spring"] .bg-slate-800 {
+  background-color: var(--bg-secondary) !important;
+  backdrop-filter: blur(12px) !important;
+  border-color: rgba(129, 199, 132, 0.2) !important;
+}
+
+[data-theme="spring"] .text-cyan-400,
+[data-theme="spring"] .text-cyan-500 {
+  color: #81C784 !important;
+}
+
+[data-theme="spring"] .bg-cyan-500,
+[data-theme="spring"] .bg-cyan-600 {
+  background-color: #81C784 !important;
+  color: #0A1A10 !important;
+  font-weight: bold !important;
+}
+
+[data-theme="spring"] .bg-cyan-500:hover,
+[data-theme="spring"] .bg-cyan-600:hover {
+  background-color: #FFF176 !important;
+  box-shadow: 0 0 15px rgba(255, 241, 118, 0.4) !important;
+}
+
+/* Flower Petal Animation */
+@keyframes fall-petal {
+  0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(110vh) rotate(360deg) translateX(20px); opacity: 0; }
+}
+
+.spring-petal {
+  position: fixed;
+  top: -10%;
+  z-index: 10;
+  pointer-events: none;
+  background: #FFF176;
+  width: 10px;
+  height: 10px;
+  border-radius: 50% 0 50% 50%;
+  opacity: 0.6;
+  animation: fall-petal linear infinite;
+}
+
 [data-theme="halloween"] .bg-cyan-500:hover,
 [data-theme="halloween"] .bg-cyan-600:hover,
 [data-theme="halloween"] .bg-purple-500:hover,

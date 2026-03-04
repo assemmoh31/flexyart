@@ -16,7 +16,19 @@ import {
   AlertTriangle,
   Palette,
   Calendar,
-  DollarSign
+  DollarSign,
+  ChevronDown,
+  Briefcase,
+  FileText,
+  MessageSquare,
+  Lock,
+  Globe,
+  Settings,
+  Bell,
+  Star,
+  Tag,
+  Activity,
+  Shield
 } from 'lucide-react';
 import { 
   LineChart, 
@@ -25,16 +37,29 @@ import {
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  ResponsiveContainer,
-  BarChart,
-  Bar
+  ResponsiveContainer
 } from 'recharts';
-import CreatorBadge from '../components/CreatorBadge';
-import ThemeManager from '../components/admin/ThemeManager';
-import SeasonalThemeManager from '../components/admin/SeasonalThemeManager';
-import RevenueDashboard from '../components/admin/RevenueDashboard';
 
-// Mock Data for Analytics
+// Components
+import RevenueDashboard from '../components/admin/RevenueDashboard';
+import EventCommandCenter from '../components/admin/EventCommandCenter';
+import ThemeManager from '../components/admin/ThemeManager';
+import PayoutDashboard from '../components/admin/PayoutDashboard';
+import FeaturedSlotManager from '../components/admin/FeaturedSlotManager';
+import SiteSettings from '../components/admin/SiteSettings';
+import ModerationQueue from '../components/admin/ModerationQueue';
+import UserManagement from '../components/admin/UserManagement';
+import SystemNotificationModal from '../components/admin/modals/SystemNotificationModal';
+import CatalogControl from '../components/admin/CatalogControl';
+import TransactionLogs from '../components/admin/TransactionLogs';
+import DisputeCenter from '../components/admin/DisputeCenter';
+import SellerVerification from '../components/admin/SellerVerification';
+import SupportTickets from '../components/admin/SupportTickets';
+import PromoCodeManager from '../components/admin/PromoCodeManager';
+import AuditLogs from '../components/admin/AuditLogs';
+import StaffPermissions from '../components/admin/StaffPermissions';
+
+// Mock Data for Analytics (kept for the Analytics tab)
 const salesDataRanges = {
   '24h': [
     { name: '00:00', sales: 50 },
@@ -89,143 +114,231 @@ const revenueData = {
   allTime: 142000.00
 };
 
-// Mock Data for Moderation
-const pendingArtworks = [
-  {
-    id: 101,
-    title: "Neon Samurai 2077",
-    creator: "CyberArtist_X",
-    preview: "https://picsum.photos/seed/admin1/300/200", // Using image for preview mock
-    submitted: "2 hours ago"
-  },
-  {
-    id: 102,
-    title: "Abstract Fluid Motion",
-    creator: "FlowMaster",
-    preview: "https://picsum.photos/seed/admin2/300/200",
-    submitted: "5 hours ago"
-  },
-  {
-    id: 103,
-    title: "Retro Glitch Pack",
-    creator: "8BitWonder",
-    preview: "https://picsum.photos/seed/admin3/300/200",
-    submitted: "1 day ago"
-  }
-];
-
-// Mock Data for Users
-const mockUserResult = {
-  id: "u_123",
-  username: "NeonDreams",
-  steamId: "76561198000000000",
-  email: "neon@example.com",
-  role: "Creator",
-  level: 3, // Elite
-  totalRevenue: 1240.50,
-  status: "Active",
-  subscription: "Free"
-};
-
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('analytics');
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(['management', 'content', 'growth', 'system']);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
+
+  const toggleCategory = (category: string) => {
+    setExpandedCategories(prev => 
+      prev.includes(category) 
+        ? prev.filter(c => c !== category) 
+        : [...prev, category]
+    );
+  };
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'analytics':
-        return <AnalyticsTab />;
-      case 'revenue':
-        return <RevenueDashboard />;
-      case 'moderation':
-        return <ModerationTab />;
-      case 'users':
-        return <UserManagementTab />;
-      case 'themes':
-        return <ThemeManager />;
-      case 'seasonal':
-        return <SeasonalThemeManager />;
-      default:
-        return <AnalyticsTab />;
+      // Management & Operations
+      case 'analytics': return <AnalyticsTab />;
+      case 'users': return <UserManagement />;
+      case 'catalog': return <CatalogControl />;
+      case 'transactions': return <TransactionLogs />;
+      case 'payouts': return <PayoutDashboard />;
+      
+      // Content & Safety
+      case 'moderation': return <ModerationQueue />;
+      case 'disputes': return <DisputeCenter />;
+      case 'kyc': return <SellerVerification />;
+      case 'tickets': return <SupportTickets />;
+      
+      // Growth & Marketing
+      case 'seasonal': return <EventCommandCenter />;
+      case 'featured': return <FeaturedSlotManager />;
+      case 'themes': return <ThemeManager />;
+      case 'notifications': return (
+        <div className="flex flex-col items-center justify-center h-96 text-center space-y-4">
+          <div className="p-4 bg-slate-900 rounded-full">
+            <Bell className="w-8 h-8 text-cyan-400" />
+          </div>
+          <h3 className="text-xl font-bold text-white">Notification Center</h3>
+          <p className="text-slate-400 max-w-md">
+            Use the "Broadcast Alert" button in the top right to send system-wide notifications.
+            <br />
+            <span className="text-xs text-slate-500 mt-2 block">(Full history view coming soon)</span>
+          </p>
+          <button 
+            onClick={() => setIsNotificationModalOpen(true)}
+            className="mt-4 px-6 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg font-bold transition-colors"
+          >
+            Send New Alert
+          </button>
+        </div>
+      );
+      case 'promos': return <PromoCodeManager />;
+      
+      // System Control
+      case 'audit': return <AuditLogs />;
+      case 'permissions': return <StaffPermissions />;
+      case 'settings': return <SiteSettings />;
+      
+      default: return <PlaceholderPage title={activeTab} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 flex flex-col md:flex-row">
+    <div className="min-h-screen bg-slate-950 text-slate-200 flex flex-col md:flex-row font-sans">
       {/* Sidebar Navigation */}
-      <aside className="w-full md:w-64 bg-slate-900/50 border-r border-slate-800 flex-shrink-0">
-        <div className="p-6">
-          <h1 className="text-xl font-bold text-white flex items-center gap-2">
-            <ShieldAlert className="w-6 h-6 text-red-500" />
-            Admin Panel
+      <aside className="w-full md:w-72 bg-slate-900/50 border-r border-slate-800 flex-shrink-0 flex flex-col h-screen sticky top-0 overflow-y-auto custom-scrollbar">
+        <div className="p-6 border-b border-slate-800/50">
+          <h1 className="text-xl font-bold text-white flex items-center gap-3">
+            <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-cyan-500/20">
+              <Shield className="w-5 h-5 text-white" />
+            </div>
+            <span className="tracking-tight">Admin<span className="text-cyan-400">Panel</span></span>
           </h1>
+          <div className="mt-2 flex items-center gap-2 text-xs text-slate-500 font-mono bg-slate-950/50 py-1 px-2 rounded border border-slate-800">
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+            System Operational
+          </div>
         </div>
-        <nav className="px-4 space-y-2">
+
+        <nav className="flex-1 px-4 py-6 space-y-6">
+          {/* Dashboard Home */}
           <SidebarItem 
-            icon={<TrendingUp className="w-5 h-5" />} 
-            label="Analytics" 
+            icon={<LayoutDashboard className="w-5 h-5" />} 
+            label="Overview" 
             active={activeTab === 'analytics'} 
             onClick={() => setActiveTab('analytics')} 
           />
-          <SidebarItem 
-            icon={<DollarSign className="w-5 h-5" />} 
-            label="Revenue & Finance" 
-            active={activeTab === 'revenue'} 
-            onClick={() => setActiveTab('revenue')} 
-          />
-          <SidebarItem 
-            icon={<ShieldAlert className="w-5 h-5" />} 
-            label="Moderation" 
-            active={activeTab === 'moderation'} 
-            onClick={() => setActiveTab('moderation')} 
-            badge={pendingArtworks.length}
-          />
-          <SidebarItem 
-            icon={<Users className="w-5 h-5" />} 
-            label="User Management" 
-            active={activeTab === 'users'} 
-            onClick={() => setActiveTab('users')} 
-          />
-          <SidebarItem 
-            icon={<Palette className="w-5 h-5" />} 
-            label="Theme Manager" 
-            active={activeTab === 'themes'} 
-            onClick={() => setActiveTab('themes')} 
-          />
-          <SidebarItem 
-            icon={<Calendar className="w-5 h-5" />} 
-            label="Seasonal Events" 
-            active={activeTab === 'seasonal'} 
-            onClick={() => setActiveTab('seasonal')} 
-          />
+
+          {/* Management & Operations */}
+          <div className="space-y-1">
+            <CategoryHeader 
+              label="Management & Ops" 
+              expanded={expandedCategories.includes('management')} 
+              onClick={() => toggleCategory('management')} 
+            />
+            {expandedCategories.includes('management') && (
+              <div className="space-y-1 pl-2 animate-in slide-in-from-top-2 duration-200">
+                <SidebarItem icon={<Users className="w-4 h-4" />} label="User Manager" active={activeTab === 'users'} onClick={() => setActiveTab('users')} />
+                <SidebarItem icon={<Briefcase className="w-4 h-4" />} label="Catalog Control" active={activeTab === 'catalog'} onClick={() => setActiveTab('catalog')} />
+                <SidebarItem icon={<FileText className="w-4 h-4" />} label="Transaction Logs" active={activeTab === 'transactions'} onClick={() => setActiveTab('transactions')} />
+                <SidebarItem icon={<DollarSign className="w-4 h-4" />} label="Payout Dashboard" active={activeTab === 'payouts'} onClick={() => setActiveTab('payouts')} />
+              </div>
+            )}
+          </div>
+
+          {/* Content & Safety */}
+          <div className="space-y-1">
+            <CategoryHeader 
+              label="Content & Safety" 
+              expanded={expandedCategories.includes('content')} 
+              onClick={() => toggleCategory('content')} 
+            />
+            {expandedCategories.includes('content') && (
+              <div className="space-y-1 pl-2 animate-in slide-in-from-top-2 duration-200">
+                <SidebarItem icon={<ShieldAlert className="w-4 h-4" />} label="Moderation Queue" active={activeTab === 'moderation'} onClick={() => setActiveTab('moderation')} badge={5} />
+                <SidebarItem icon={<AlertTriangle className="w-4 h-4" />} label="Dispute Center" active={activeTab === 'disputes'} onClick={() => setActiveTab('disputes')} />
+                <SidebarItem icon={<CheckCircle className="w-4 h-4" />} label="Seller Verification" active={activeTab === 'kyc'} onClick={() => setActiveTab('kyc')} />
+                <SidebarItem icon={<MessageSquare className="w-4 h-4" />} label="Support Tickets" active={activeTab === 'tickets'} onClick={() => setActiveTab('tickets')} />
+              </div>
+            )}
+          </div>
+
+          {/* Growth & Marketing */}
+          <div className="space-y-1">
+            <CategoryHeader 
+              label="Growth & Marketing" 
+              expanded={expandedCategories.includes('growth')} 
+              onClick={() => toggleCategory('growth')} 
+            />
+            {expandedCategories.includes('growth') && (
+              <div className="space-y-1 pl-2 animate-in slide-in-from-top-2 duration-200">
+                <SidebarItem icon={<Calendar className="w-4 h-4" />} label="Event Command Center" active={activeTab === 'seasonal'} onClick={() => setActiveTab('seasonal')} />
+                <SidebarItem icon={<Star className="w-4 h-4" />} label="Featured Slots" active={activeTab === 'featured'} onClick={() => setActiveTab('featured')} />
+                <SidebarItem icon={<Bell className="w-4 h-4" />} label="Notification Center" active={activeTab === 'notifications'} onClick={() => setIsNotificationModalOpen(true)} />
+                <SidebarItem icon={<Tag className="w-4 h-4" />} label="Promo Codes" active={activeTab === 'promos'} onClick={() => setActiveTab('promos')} />
+                <SidebarItem icon={<Palette className="w-4 h-4" />} label="Theme Manager" active={activeTab === 'themes'} onClick={() => setActiveTab('themes')} />
+              </div>
+            )}
+          </div>
+
+          {/* System Control */}
+          <div className="space-y-1">
+            <CategoryHeader 
+              label="System Control" 
+              expanded={expandedCategories.includes('system')} 
+              onClick={() => toggleCategory('system')} 
+            />
+            {expandedCategories.includes('system') && (
+              <div className="space-y-1 pl-2 animate-in slide-in-from-top-2 duration-200">
+                <SidebarItem icon={<Activity className="w-4 h-4" />} label="Audit Logs" active={activeTab === 'audit'} onClick={() => setActiveTab('audit')} />
+                <SidebarItem icon={<Lock className="w-4 h-4" />} label="Staff Permissions" active={activeTab === 'permissions'} onClick={() => setActiveTab('permissions')} />
+                <SidebarItem icon={<Settings className="w-4 h-4" />} label="Site Settings" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
+              </div>
+            )}
+          </div>
         </nav>
+
+        <div className="p-4 border-t border-slate-800/50">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 border border-slate-800">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-xs font-bold text-white">
+              AD
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <p className="text-sm font-bold text-white truncate">Admin User</p>
+              <p className="text-xs text-slate-500 truncate">Super Admin</p>
+            </div>
+          </div>
+        </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 p-6 md:p-8 overflow-y-auto">
         {renderContent()}
       </main>
+
+      <SystemNotificationModal 
+        isOpen={isNotificationModalOpen} 
+        onClose={() => setIsNotificationModalOpen(false)} 
+      />
     </div>
   );
 }
 
+const CategoryHeader = ({ label, expanded, onClick }: { label: string, expanded: boolean, onClick: () => void }) => (
+  <button 
+    onClick={onClick}
+    className="w-full flex items-center justify-between px-4 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider hover:text-slate-300 transition-colors"
+  >
+    {label}
+    <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
+  </button>
+);
+
 const SidebarItem = ({ icon, label, active, onClick, badge }: { icon: React.ReactNode, label: string, active: boolean, onClick: () => void, badge?: number }) => (
   <button
     onClick={onClick}
-    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+    className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 group relative ${
       active 
-        ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20' 
-        : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+        ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shadow-[0_0_10px_rgba(34,211,238,0.1)]' 
+        : 'text-slate-400 hover:bg-slate-800/50 hover:text-white border border-transparent'
     }`}
   >
-    {icon}
-    <span className="font-medium flex-1 text-left">{label}</span>
+    <div className={`transition-colors ${active ? 'text-cyan-400' : 'text-slate-500 group-hover:text-white'}`}>
+      {icon}
+    </div>
+    <span className="font-medium flex-1 text-left text-sm">{label}</span>
     {badge && (
-      <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+      <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">
         {badge}
       </span>
     )}
-    {active && <ChevronRight className="w-4 h-4" />}
+    {active && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-cyan-500 rounded-r-full shadow-[0_0_8px_rgba(34,211,238,0.5)]"></div>}
   </button>
+);
+
+const PlaceholderPage = ({ title }: { title: string }) => (
+  <div className="flex flex-col items-center justify-center h-[60vh] text-center space-y-4">
+    <div className="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center border border-slate-800 animate-pulse">
+      <Settings className="w-10 h-10 text-slate-600" />
+    </div>
+    <h2 className="text-2xl font-bold text-white capitalize">{title.replace('-', ' ')}</h2>
+    <p className="text-slate-400 max-w-md">
+      This module is currently under development. Check back later for updates.
+    </p>
+  </div>
 );
 
 const AnalyticsTab = () => {
@@ -241,37 +354,53 @@ const AnalyticsTab = () => {
   };
 
   return (
-    <div className="space-y-8">
-      <h2 className="text-2xl font-bold text-white">Dashboard Overview</h2>
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-white">Dashboard Overview</h2>
+          <p className="text-slate-400 text-sm">Real-time platform metrics and performance.</p>
+        </div>
+        <div className="flex bg-slate-900 rounded-lg p-1 border border-slate-800">
+          {(['24h', '7d', '15d', '30d'] as const).map((range) => (
+            <button 
+              key={range}
+              onClick={() => setTimeRange(range)}
+              className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${timeRange === range ? 'bg-cyan-500 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
+            >
+              {range}
+            </button>
+          ))}
+        </div>
+      </div>
       
       {/* Revenue Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
           title="Revenue (24h)" 
           value={`€${revenueData.last24h.toFixed(2)}`} 
-          icon={<TrendingUp className="w-6 h-6 text-emerald-400" />} 
-          bg="bg-emerald-500/10" 
+          icon={<TrendingUp className="w-5 h-5 text-emerald-400" />} 
+          bg="bg-emerald-500/5" 
           border="border-emerald-500/20"
         />
         <StatCard 
           title="Revenue (7d)" 
           value={`€${revenueData.last7d.toFixed(2)}`} 
-          icon={<TrendingUp className="w-6 h-6 text-emerald-400" />} 
-          bg="bg-emerald-500/10" 
+          icon={<TrendingUp className="w-5 h-5 text-emerald-400" />} 
+          bg="bg-emerald-500/5" 
           border="border-emerald-500/20"
         />
         <StatCard 
           title="Revenue (30d)" 
           value={`€${revenueData.last30d.toFixed(2)}`} 
-          icon={<TrendingUp className="w-6 h-6 text-emerald-400" />} 
-          bg="bg-emerald-500/10" 
+          icon={<TrendingUp className="w-5 h-5 text-emerald-400" />} 
+          bg="bg-emerald-500/5" 
           border="border-emerald-500/20"
         />
         <StatCard 
           title="All-Time Revenue" 
           value={`€${revenueData.allTime.toLocaleString()}`} 
-          icon={<TrendingUp className="w-6 h-6 text-purple-400" />} 
-          bg="bg-purple-500/10" 
+          icon={<DollarSign className="w-5 h-5 text-purple-400" />} 
+          bg="bg-purple-500/5" 
           border="border-purple-500/20"
         />
       </div>
@@ -281,75 +410,48 @@ const AnalyticsTab = () => {
         <StatCard 
           title="Online Now" 
           value={trafficData.onlineNow} 
-          icon={<Eye className="w-6 h-6 text-cyan-400" />} 
-          bg="bg-cyan-500/10" 
+          icon={<Eye className="w-5 h-5 text-cyan-400" />} 
+          bg="bg-cyan-500/5" 
           border="border-cyan-500/20"
           pulse
         />
         <StatCard 
           title="Visitors (24h)" 
           value={trafficData.visitors24h.toLocaleString()} 
-          icon={<Users className="w-6 h-6 text-slate-400" />} 
-          bg="bg-slate-800/50" 
+          icon={<Users className="w-5 h-5 text-slate-400" />} 
+          bg="bg-slate-800/30" 
           border="border-slate-700"
         />
         <StatCard 
           title="Visitors (Week)" 
           value={trafficData.visitorsWeek.toLocaleString()} 
-          icon={<Users className="w-6 h-6 text-slate-400" />} 
-          bg="bg-slate-800/50" 
+          icon={<Users className="w-5 h-5 text-slate-400" />} 
+          bg="bg-slate-800/30" 
           border="border-slate-700"
         />
         <StatCard 
           title="Visitors (Month)" 
           value={trafficData.visitorsMonth.toLocaleString()} 
-          icon={<Users className="w-6 h-6 text-slate-400" />} 
-          bg="bg-slate-800/50" 
+          icon={<Users className="w-5 h-5 text-slate-400" />} 
+          bg="bg-slate-800/30" 
           border="border-slate-700"
         />
       </div>
 
       {/* Sales Chart */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 h-[400px]">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-white">Sales Trend ({getRangeLabel()})</h3>
-          <div className="flex bg-slate-950 rounded-lg p-1 border border-slate-800">
-            <button 
-              onClick={() => setTimeRange('24h')}
-              className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${timeRange === '24h' ? 'bg-cyan-500 text-white' : 'text-slate-400 hover:text-white'}`}
-            >
-              24h
-            </button>
-            <button 
-              onClick={() => setTimeRange('7d')}
-              className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${timeRange === '7d' ? 'bg-cyan-500 text-white' : 'text-slate-400 hover:text-white'}`}
-            >
-              7d
-            </button>
-            <button 
-              onClick={() => setTimeRange('15d')}
-              className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${timeRange === '15d' ? 'bg-cyan-500 text-white' : 'text-slate-400 hover:text-white'}`}
-            >
-              15d
-            </button>
-            <button 
-              onClick={() => setTimeRange('30d')}
-              className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${timeRange === '30d' ? 'bg-cyan-500 text-white' : 'text-slate-400 hover:text-white'}`}
-            >
-              30d
-            </button>
-          </div>
-        </div>
+      <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800 rounded-xl p-6 h-[400px] shadow-xl">
+        <h3 className="text-lg font-bold text-white mb-6">Sales Trend ({getRangeLabel()})</h3>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={salesDataRanges[timeRange]}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-            <XAxis dataKey="name" stroke="#94a3b8" />
-            <YAxis stroke="#94a3b8" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+            <XAxis dataKey="name" stroke="#64748b" tick={{fontSize: 12}} tickLine={false} axisLine={false} dy={10} />
+            <YAxis stroke="#64748b" tick={{fontSize: 12}} tickLine={false} axisLine={false} dx={-10} />
             <Tooltip 
-              contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', color: '#f8fafc' }}
+              contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', color: '#f8fafc', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
               itemStyle={{ color: '#22d3ee' }}
+              cursor={{ stroke: '#334155', strokeWidth: 1, strokeDasharray: '4 4' }}
             />
-            <Line type="monotone" dataKey="sales" stroke="#22d3ee" strokeWidth={3} activeDot={{ r: 8 }} />
+            <Line type="monotone" dataKey="sales" stroke="#22d3ee" strokeWidth={3} dot={{ r: 4, fill: '#0f172a', strokeWidth: 2 }} activeDot={{ r: 6, fill: '#22d3ee' }} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -358,235 +460,17 @@ const AnalyticsTab = () => {
 };
 
 const StatCard = ({ title, value, icon, bg, border, pulse }: any) => (
-  <div className={`p-6 rounded-xl border ${border} ${bg} backdrop-blur-sm relative overflow-hidden`}>
+  <div className={`p-6 rounded-xl border ${border} ${bg} backdrop-blur-sm relative overflow-hidden group hover:border-opacity-50 transition-all`}>
     {pulse && (
-      <div className="absolute top-2 right-2 h-2 w-2 rounded-full bg-cyan-500 animate-ping"></div>
+      <div className="absolute top-3 right-3 h-2 w-2 rounded-full bg-cyan-500 animate-ping"></div>
     )}
     <div className="flex items-center justify-between mb-4">
-      <span className="text-slate-400 font-medium">{title}</span>
-      {icon}
+      <span className="text-slate-400 font-medium text-xs uppercase tracking-wider">{title}</span>
+      <div className="p-2 rounded-lg bg-slate-950/50 border border-white/5 group-hover:scale-110 transition-transform">
+        {icon}
+      </div>
     </div>
-    <div className="text-3xl font-bold text-white">{value}</div>
+    <div className="text-3xl font-bold text-white tracking-tight">{value}</div>
   </div>
 );
 
-const ModerationTab = () => {
-  const [items, setItems] = useState(pendingArtworks);
-  const [rejectModalOpen, setRejectModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<any>(null);
-  const [rejectReason, setRejectReason] = useState('');
-
-  const handleApprove = (id: number) => {
-    setItems(items.filter(item => item.id !== id));
-    // In a real app, this would call an API
-  };
-
-  const openRejectModal = (item: any) => {
-    setSelectedItem(item);
-    setRejectModalOpen(true);
-  };
-
-  const handleReject = () => {
-    if (selectedItem) {
-      setItems(items.filter(item => item.id !== selectedItem.id));
-      setRejectModalOpen(false);
-      setSelectedItem(null);
-      setRejectReason('');
-      // In a real app, this would call an API with the reason
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-white">Moderation Queue</h2>
-      
-      {items.length === 0 ? (
-        <div className="text-center py-12 bg-slate-900/50 rounded-xl border border-slate-800">
-          <CheckCircle className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-white">All Caught Up!</h3>
-          <p className="text-slate-400">No pending artworks to review.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-6">
-          {items.map((item) => (
-            <div key={item.id} className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col md:flex-row gap-6">
-              <div className="w-full md:w-64 h-40 bg-slate-950 rounded-lg overflow-hidden border border-slate-700 relative group">
-                <img src={item.preview} alt={item.title} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="text-white font-bold">Preview .WEBM</span>
-                </div>
-              </div>
-              
-              <div className="flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-xl font-bold text-white">{item.title}</h3>
-                      <p className="text-slate-400 text-sm">by <span className="text-cyan-400">@{item.creator}</span></p>
-                    </div>
-                    <span className="text-xs text-slate-500 bg-slate-800 px-2 py-1 rounded">{item.submitted}</span>
-                  </div>
-                  
-                  <div className="mt-4 flex gap-2">
-                    <span className="px-2 py-1 bg-slate-800 text-slate-300 text-xs rounded border border-slate-700">Sci-Fi</span>
-                    <span className="px-2 py-1 bg-slate-800 text-slate-300 text-xs rounded border border-slate-700">Animated</span>
-                    <span className="px-2 py-1 bg-slate-800 text-slate-300 text-xs rounded border border-slate-700">€15.00</span>
-                  </div>
-                </div>
-
-                <div className="flex gap-4 mt-6">
-                  <button 
-                    onClick={() => handleApprove(item.id)}
-                    className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-lg font-bold transition-colors flex items-center justify-center gap-2"
-                  >
-                    <CheckCircle className="w-4 h-4" /> Approve
-                  </button>
-                  <button 
-                    onClick={() => openRejectModal(item)}
-                    className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-bold transition-colors flex items-center justify-center gap-2"
-                  >
-                    <XCircle className="w-4 h-4" /> Reject
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Rejection Modal */}
-      {rejectModalOpen && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-xl max-w-md w-full p-6 shadow-2xl">
-            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-red-500" />
-              Reject Artwork
-            </h3>
-            <p className="text-slate-400 mb-4 text-sm">
-              Please provide a reason for rejecting <span className="text-white font-medium">"{selectedItem?.title}"</span>. This will be sent to the creator.
-            </p>
-            <textarea
-              value={rejectReason}
-              onChange={(e) => setRejectReason(e.target.value)}
-              placeholder="e.g., Low resolution preview, Copyright violation..."
-              className="w-full h-32 bg-slate-950 border border-slate-700 rounded-lg p-3 text-white focus:border-red-500 focus:outline-none mb-6 text-sm"
-            ></textarea>
-            <div className="flex gap-3 justify-end">
-              <button 
-                onClick={() => setRejectModalOpen(false)}
-                className="px-4 py-2 text-slate-400 hover:text-white transition-colors"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={handleReject}
-                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold transition-colors"
-              >
-                Confirm Rejection
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-const UserManagementTab = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [user, setUser] = useState<any>(null);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.toLowerCase() === 'neondreams' || searchQuery === '76561198000000000') {
-      setUser(mockUserResult);
-    } else {
-      setUser(null);
-    }
-  };
-
-  return (
-    <div className="space-y-8">
-      <h2 className="text-2xl font-bold text-white">User Management</h2>
-      
-      <form onSubmit={handleSearch} className="flex gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
-          <input 
-            type="text" 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by Username or SteamID..." 
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 py-3 pl-10 pr-4 text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-colors"
-          />
-        </div>
-        <button type="submit" className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg font-bold transition-colors">
-          Search
-        </button>
-      </form>
-
-      {user ? (
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-          <div className="flex items-start justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-slate-800 rounded-full overflow-hidden border-2 border-slate-700">
-                <img src={`https://picsum.photos/seed/${user.username}/200/200`} alt={user.username} className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                  {user.username}
-                  <span className="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-700">{user.role}</span>
-                </h3>
-                <p className="text-slate-400 text-sm font-mono">{user.steamId}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className={`px-3 py-1 rounded-full text-xs font-bold ${user.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>
-                {user.status}
-              </span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-slate-950 p-4 rounded-lg border border-slate-800">
-              <p className="text-slate-400 text-xs uppercase tracking-wider mb-1">Total Revenue</p>
-              <p className="text-xl font-bold text-white">€{user.totalRevenue.toFixed(2)}</p>
-            </div>
-            <div className="bg-slate-950 p-4 rounded-lg border border-slate-800">
-              <p className="text-slate-400 text-xs uppercase tracking-wider mb-1">Creator Level</p>
-              <div className="flex items-center gap-2">
-                <CreatorBadge totalRevenue={user.totalRevenue} size="sm" />
-                <span className="text-xl font-bold text-white">Level {user.level}</span>
-              </div>
-            </div>
-            <div className="bg-slate-950 p-4 rounded-lg border border-slate-800">
-              <p className="text-slate-400 text-xs uppercase tracking-wider mb-1">Subscription</p>
-              <p className="text-xl font-bold text-white">{user.subscription}</p>
-            </div>
-          </div>
-
-          <div className="border-t border-slate-800 pt-6">
-            <h4 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4">Admin Actions</h4>
-            <div className="flex flex-wrap gap-4">
-              <button className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg font-medium transition-colors flex items-center gap-2">
-                <Ban className="w-4 h-4" /> Ban User
-              </button>
-              <button className="px-4 py-2 bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/20 rounded-lg font-medium transition-colors flex items-center gap-2">
-                <Zap className="w-4 h-4" /> Grant Pro Sub
-              </button>
-              <button className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 rounded-lg font-medium transition-colors flex items-center gap-2">
-                <Award className="w-4 h-4" /> Adjust Level
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : searchQuery && (
-        <div className="text-center py-12 bg-slate-900/50 rounded-xl border border-slate-800">
-          <Search className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-white">No User Found</h3>
-          <p className="text-slate-400">Try searching for "NeonDreams" to see a result.</p>
-        </div>
-      )}
-    </div>
-  );
-};
