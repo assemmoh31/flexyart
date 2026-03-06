@@ -1,7 +1,8 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, Search, ShoppingCart, User, X, LogOut, Upload, LayoutDashboard, Bell, CheckCircle, AlertTriangle, Wallet, ShieldAlert } from 'lucide-react';
+import { Menu, Search, ShoppingCart, User, X, LogOut, Upload, LayoutDashboard, Bell, CheckCircle, AlertTriangle, Wallet, ShieldAlert, Trash2 } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { useCart } from '../context/CartContext';
 
 type NotificationType = 'sale' | 'approval' | 'rejection' | 'withdrawal';
 
@@ -23,6 +24,7 @@ const SantaHatSVG = ({ className }: { className?: string }) => (
 
 export default function Navbar() {
   const { activeTheme } = useTheme();
+  const { cart, removeFromCart, cartTotal, isCartOpen, setIsCartOpen } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -39,6 +41,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
+  const cartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('flexy_user');
@@ -55,10 +58,13 @@ export default function Navbar() {
       if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
         setIsNotificationsOpen(false);
       }
+      if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
+        setIsCartOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [setIsCartOpen]);
 
   const handleMockLogin = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -156,9 +162,73 @@ export default function Navbar() {
             <button className="text-slate-300 hover:text-cyan-400 transition-colors">
               <Search className="h-5 w-5" />
             </button>
-            <button className="text-slate-300 hover:text-cyan-400 transition-colors">
-              <ShoppingCart className="h-5 w-5" />
-            </button>
+            
+            {/* Cart Dropdown */}
+            <div className="relative" ref={cartRef}>
+              <button 
+                onClick={() => setIsCartOpen(!isCartOpen)}
+                className="relative text-slate-300 hover:text-cyan-400 transition-colors focus:outline-none"
+              >
+                <ShoppingCart className="h-5 w-5" />
+                {cart.length > 0 && (
+                  <span className="absolute -top-2 -right-2 h-4 w-4 rounded-full bg-cyan-500 text-[10px] font-bold text-black flex items-center justify-center">
+                    {cart.length}
+                  </span>
+                )}
+              </button>
+
+              {isCartOpen && (
+                <div className="absolute right-0 mt-2 w-80 bg-slate-900/95 backdrop-blur-xl border border-slate-800 rounded-xl shadow-2xl py-2 z-50 animate-in fade-in zoom-in-95 duration-100 origin-top-right">
+                  <div className="px-4 py-2 border-b border-slate-800 flex items-center justify-between">
+                    <h3 className="font-semibold text-white">Shopping Cart</h3>
+                    <span className="text-xs text-slate-400">{cart.length} items</span>
+                  </div>
+                  
+                  <div className="max-h-[300px] overflow-y-auto">
+                    {cart.length === 0 ? (
+                      <div className="px-4 py-8 text-center text-slate-500 text-sm flex flex-col items-center justify-center">
+                        <ShoppingCart className="w-12 h-12 mb-3 opacity-20" />
+                        Your cart is empty.
+                      </div>
+                    ) : (
+                      <div className="divide-y divide-slate-800">
+                        {cart.map((item) => (
+                          <div key={item.id} className="p-4 flex gap-3 hover:bg-slate-800/30 transition-colors">
+                            <img src={item.image} alt={item.title} className="w-12 h-12 rounded-md object-cover bg-slate-800" />
+                            <div className="flex-1 min-w-0">
+                              <h4 className="text-sm font-medium text-white truncate">{item.title}</h4>
+                              <p className="text-xs text-slate-400 truncate">{item.creator}</p>
+                              <div className="flex items-center justify-between mt-1">
+                                <span className="text-sm font-bold text-cyan-400">€{item.price.toFixed(2)}</span>
+                                <button 
+                                  onClick={(e) => { e.stopPropagation(); removeFromCart(item.id); }}
+                                  className="text-slate-500 hover:text-red-400 transition-colors"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-4 border-t border-slate-800 bg-slate-900/50">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-sm text-slate-400">Total</span>
+                      <span className="text-lg font-bold text-white">€{cartTotal.toFixed(2)}</span>
+                    </div>
+                    <button 
+                      className="w-full py-2 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={cart.length === 0}
+                    >
+                      Checkout
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
             <Link 
               to="/upload"
               className="hidden md:flex items-center gap-2 rounded-lg border border-cyan-500/50 bg-cyan-500/10 px-4 py-2 text-sm font-bold text-cyan-400 transition-all hover:bg-cyan-500 hover:text-black hover:shadow-[0_0_20px_rgba(34,211,238,0.4)]"

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Filter, Search, ChevronDown, SlidersHorizontal, Snowflake, Heart, Sun } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import CreatorBadge from '../components/CreatorBadge';
 import { useTheme } from '../context/ThemeContext';
 
@@ -17,9 +17,32 @@ const artworks = [
 ];
 
 export default function Marketplace() {
+  const { category } = useParams<{ category: string }>();
+  const navigate = useNavigate();
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'artwork' | 'workshop'>(
+    category === 'workshop' ? 'workshop' : 'artwork'
+  );
   const { activeTheme } = useTheme();
   const [favorites, setFavorites] = useState<number[]>([]);
+
+  // Sync tab state with URL parameter
+  useEffect(() => {
+    if (category === 'workshop') {
+      setActiveTab('workshop');
+    } else {
+      setActiveTab('artwork');
+      // If no category or invalid category, redirect to /marketplace/artwork
+      if (category !== 'artwork') {
+        navigate('/marketplace/artwork', { replace: true });
+      }
+    }
+  }, [category, navigate]);
+
+  const handleTabChange = (tab: 'artwork' | 'workshop') => {
+    setActiveTab(tab);
+    navigate(`/marketplace/${tab}`);
+  };
 
   const toggleFavorite = (e: React.MouseEvent, id: number) => {
     e.preventDefault();
@@ -63,7 +86,30 @@ export default function Marketplace() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 border-b border-slate-800 pb-8">
         <div>
           <h1 className="text-4xl font-extrabold text-white tracking-tight">Marketplace</h1>
-          <p className="text-slate-400 mt-2 text-lg">Discover the perfect artwork for your Steam profile.</p>
+          <p className="text-slate-400 mt-2 text-lg mb-6">Discover the perfect artwork for your Steam profile.</p>
+          
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => handleTabChange('artwork')}
+              className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
+                activeTab === 'artwork'
+                  ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/50 shadow-[0_0_15px_rgba(34,211,238,0.2)]'
+                  : 'bg-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+              }`}
+            >
+              Artwork
+            </button>
+            <button
+              onClick={() => handleTabChange('workshop')}
+              className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
+                activeTab === 'workshop'
+                  ? 'bg-purple-500/20 text-purple-400 border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.2)]'
+                  : 'bg-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+              }`}
+            >
+              Workshop
+            </button>
+          </div>
         </div>
         
         <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -175,62 +221,44 @@ export default function Marketplace() {
           </div>
 
           {/* Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {artworks.map((artwork) => (
               <Link 
                 key={artwork.id} 
                 to={`/artwork/${artwork.id}`} 
-                className="group relative rounded-xl bg-slate-900 border border-slate-800 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 hover:border-slate-700 flex flex-col"
+                className="group relative rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-cyan-500/20 hover:border-cyan-500/50 flex flex-col"
                 onMouseEnter={handleCardHover}
               >
-                <div className="aspect-[16/10] w-full overflow-hidden relative">
+                <div className="aspect-[4/3] w-full overflow-hidden relative">
                   <img 
                     src={artwork.image} 
                     alt={artwork.title} 
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     referrerPolicy="no-referrer"
                   />
-                  <div className="absolute top-3 right-3 rounded-md bg-slate-950/80 backdrop-blur-md px-2.5 py-1 text-xs font-semibold text-white border border-slate-700 z-10">
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  
+                  <div className="absolute top-4 right-4 rounded-lg bg-slate-950/80 backdrop-blur-md px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white border border-slate-700 z-10 shadow-lg">
                     {artwork.type}
                   </div>
                   {activeTheme === 'summer' && (
-                    <div className="absolute top-3 left-3 z-10 sale-tag">
+                    <div className="absolute top-4 left-4 z-10 sale-tag">
                       SALE
                     </div>
                   )}
                   {activeTheme === 'valentine' && (
                     <button 
                       onClick={(e) => toggleFavorite(e, artwork.id)}
-                      className="absolute top-3 left-3 z-10 p-2 rounded-full bg-slate-950/50 backdrop-blur-md border border-slate-700 hover:bg-slate-900 transition-colors"
+                      className="absolute top-4 left-4 z-10 p-2.5 rounded-full bg-slate-950/50 backdrop-blur-md border border-slate-700 hover:bg-slate-900 transition-colors shadow-lg"
                     >
-                      <Heart className={`w-4 h-4 transition-all duration-300 ${favorites.includes(artwork.id) ? 'heart-pop-active' : 'text-slate-400 hover:text-pink-400'}`} />
+                      <Heart className={`w-5 h-5 transition-all duration-300 ${favorites.includes(artwork.id) ? 'heart-pop-active' : 'text-slate-400 hover:text-pink-400'}`} />
                     </button>
                   )}
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
-                    <button 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        window.dispatchEvent(new CustomEvent('checkout-success'));
-                      }}
-                      className="rounded-lg bg-cyan-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg hover:bg-cyan-400 transition-colors transform translate-y-4 group-hover:translate-y-0 duration-300"
-                    >
-                      {activeTheme === 'lunar' ? 'Buy Now' : 'View Details'}
-                    </button>
-                  </div>
-                </div>
-                <div className="p-4 flex-1 flex flex-col">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-base font-bold text-white group-hover:text-cyan-400 transition-colors line-clamp-1">{artwork.title}</h3>
-                    <span className="text-base font-bold text-white ml-2">{artwork.price}</span>
-                  </div>
-                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-800/50">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-400">{artwork.creator}</span>
-                      <CreatorBadge totalRevenue={artwork.creatorRevenue} size="sm" />
-                    </div>
-                    <span className="text-xs font-medium text-slate-500 bg-slate-800 px-2 py-1 rounded-md">{artwork.category}</span>
+                  {/* Hover Overlay Content */}
+                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 transform translate-y-4 group-hover:translate-y-0">
+                    <span className="text-2xl font-extrabold text-white drop-shadow-lg bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-xl border border-slate-700 shadow-lg">
+                      {artwork.price}
+                    </span>
                   </div>
                 </div>
               </Link>

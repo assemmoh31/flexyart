@@ -15,7 +15,8 @@ import {
   ChevronRight,
   Settings,
   Snowflake,
-  Tag
+  Tag,
+  Zap
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CreatorBadge, { getCreatorLevel, getNextLevel } from '../components/CreatorBadge';
@@ -117,6 +118,13 @@ export default function CreatorStudio() {
             active={activeTab === 'artworks'} 
             onClick={() => setActiveTab('artworks')} 
           />
+          <Link 
+            to="/promote" 
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-slate-400 hover:bg-slate-800 hover:text-white"
+          >
+            <Zap className="w-5 h-5" />
+            <span className="font-medium">Boost Reach</span>
+          </Link>
           <SidebarItem 
             icon={<Tag className="w-5 h-5" />} 
             label="Sales & Promotions" 

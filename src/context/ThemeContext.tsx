@@ -29,9 +29,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const fetchThemeSettings = async () => {
       // Mock data representing the 'site_settings' table in D1
       const mockSettings = {
-        active_theme: 'spring' as SeasonalTheme,
-        start_date: '2026-03-01',
-        end_date: '2026-03-31'
+        active_theme: 'default' as SeasonalTheme,
+        start_date: '2026-01-01',
+        end_date: '2026-12-31'
       };
 
       setTheme(mockSettings.active_theme);

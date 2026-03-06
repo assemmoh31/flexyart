@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Maximize2, ShoppingCart, Heart, Share2, MessageSquare, Star, CheckCircle2, ArrowRight } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 // Mock data for the artwork
 const artworkData = {
@@ -13,7 +14,7 @@ const artworkData = {
     followers: '12.4k',
     isFollowing: false,
   },
-  price: '€15.00',
+  price: 15.00,
   image: 'https://picsum.photos/seed/cyber1/1200/800',
   type: 'Animated Showcase',
   category: 'Sci-Fi',
@@ -44,9 +45,20 @@ export default function ArtworkDetail() {
   const { id } = useParams();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isFollowing, setIsFollowing] = useState(artworkData.creator.isFollowing);
+  const { addToCart } = useCart();
 
   // In a real app, you would fetch the artwork data based on the ID
   const artwork = artworkData;
+
+  const handleAddToCart = () => {
+    addToCart({
+      id: artwork.id,
+      title: artwork.title,
+      price: artwork.price,
+      image: artwork.image,
+      creator: artwork.creator.handle
+    });
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
@@ -252,14 +264,17 @@ export default function ArtworkDetail() {
               </div>
 
               <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 mb-8">
-                {artwork.price}
+                €{artwork.price.toFixed(2)}
               </div>
 
               <div className="space-y-3">
                 <button className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-500 py-4 text-base font-bold text-white shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all hover:scale-[1.02]">
                   Buy Now
                 </button>
-                <button className="w-full flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-800 py-4 text-base font-bold text-white hover:bg-slate-700 hover:border-slate-600 transition-all">
+                <button 
+                  onClick={handleAddToCart}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-800 py-4 text-base font-bold text-white hover:bg-slate-700 hover:border-slate-600 transition-all"
+                >
                   <ShoppingCart className="h-5 w-5" /> Add to Cart
                 </button>
               </div>

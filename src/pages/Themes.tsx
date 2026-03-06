@@ -10,8 +10,7 @@ export default function Themes() {
             <LayoutTemplate className="h-4 w-4" />
             <span>Complete Profile Overhauls</span>
           </div>
-          <h1 className="text-4xl font-extrabold text-white tracking-tight sm:text-5xl mb-4">Profile Themes</h1>
-          <p className="text-xl text-slate-400">Transform your entire Steam presence with curated bundles including backgrounds, artwork showcases, and custom text boxes.</p>
+          <h1 className="text-4xl font-extrabold text-white tracking-tight sm:text-5xl">Profile Themes</h1>
         </div>
       </div>
 

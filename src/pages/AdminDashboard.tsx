@@ -58,6 +58,7 @@ import SupportTickets from '../components/admin/SupportTickets';
 import PromoCodeManager from '../components/admin/PromoCodeManager';
 import AuditLogs from '../components/admin/AuditLogs';
 import StaffPermissions from '../components/admin/StaffPermissions';
+import TagMaster from '../components/admin/TagMaster';
 
 // Mock Data for Analytics (kept for the Analytics tab)
 const salesDataRanges = {
@@ -133,6 +134,7 @@ export default function AdminDashboard() {
       case 'analytics': return <AnalyticsTab />;
       case 'users': return <UserManagement />;
       case 'catalog': return <CatalogControl />;
+      case 'tags': return <TagMaster />;
       case 'transactions': return <TransactionLogs />;
       case 'payouts': return <PayoutDashboard />;
       
@@ -213,6 +215,7 @@ export default function AdminDashboard() {
               <div className="space-y-1 pl-2 animate-in slide-in-from-top-2 duration-200">
                 <SidebarItem icon={<Users className="w-4 h-4" />} label="User Manager" active={activeTab === 'users'} onClick={() => setActiveTab('users')} />
                 <SidebarItem icon={<Briefcase className="w-4 h-4" />} label="Catalog Control" active={activeTab === 'catalog'} onClick={() => setActiveTab('catalog')} />
+                <SidebarItem icon={<Tag className="w-4 h-4" />} label="Tag & Metadata Master" active={activeTab === 'tags'} onClick={() => setActiveTab('tags')} />
                 <SidebarItem icon={<FileText className="w-4 h-4" />} label="Transaction Logs" active={activeTab === 'transactions'} onClick={() => setActiveTab('transactions')} />
                 <SidebarItem icon={<DollarSign className="w-4 h-4" />} label="Payout Dashboard" active={activeTab === 'payouts'} onClick={() => setActiveTab('payouts')} />
               </div>

@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { Upload, X, Check, FileVideo, File, AlertCircle, Info, DollarSign } from 'lucide-react';
+import { Upload, X, Check, FileVideo, File, AlertCircle, Info, DollarSign, Plus } from 'lucide-react';
+import ArtworkDetailsSection from '../components/upload/ArtworkDetailsSection';
+import UsageRightsSection from '../components/upload/UsageRightsSection';
 
 export default function UploadPage() {
   const [previewFile, setPreviewFile] = useState<File | null>(null);
@@ -8,17 +10,33 @@ export default function UploadPage() {
   
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [productType, setProductType] = useState('artwork');
   const [tags, setTags] = useState<string[]>([]);
   const [currentTag, setCurrentTag] = useState('');
-  const [selectedColor, setSelectedColor] = useState('#22d3ee'); // Default cyan
+  const [selectedColors, setSelectedColors] = useState<string[]>(['#000000']); // Default black
+  const [showMoreColors, setShowMoreColors] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
   const [price, setPrice] = useState('');
   const [isAI, setIsAI] = useState(false);
+  
+  // New Artwork Details State
+  const [gameName, setGameName] = useState('');
+  const [characterName, setCharacterName] = useState('');
+  const [steamBackground, setSteamBackground] = useState('');
+  const [softwareUsed, setSoftwareUsed] = useState<string[]>([]);
+  const [styleTags, setStyleTags] = useState<string[]>([]);
+  
+  // Licensing State
+  const [licenseType, setLicenseType] = useState('personal');
+  const [commercialPrice, setCommercialPrice] = useState('');
+  
+  const isFanArt = gameName.trim().length > 0 || characterName.trim().length > 0;
   
   const previewInputRef = useRef<HTMLInputElement>(null);
   const sourceInputRef = useRef<HTMLInputElement>(null);
 
   const colors = [
+    '#000000', // Black
     '#22d3ee', // Cyan
     '#a855f7', // Purple
     '#ef4444', // Red
@@ -28,6 +46,19 @@ export default function UploadPage() {
     '#3b82f6', // Blue
     '#ffffff', // White
   ];
+
+  const extendedColors = [
+    '#64748b', '#78716c', '#b91c1c', '#c2410c', '#b45309', '#4d7c0f', '#15803d', '#047857',
+    '#0f766e', '#0369a1', '#1d4ed8', '#4338ca', '#6d28d9', '#a21caf', '#be185d', '#e11d48'
+  ];
+
+  const toggleColor = (color: string) => {
+    if (selectedColors.includes(color)) {
+      setSelectedColors(selectedColors.filter(c => c !== color));
+    } else if (selectedColors.length < 3) {
+      setSelectedColors([...selectedColors, color]);
+    }
+  };
 
   const handlePreviewDrop = (e: React.DragEvent) => {
     e.preventDefault();
@@ -190,6 +221,27 @@ export default function UploadPage() {
                 <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isAI ? 'translate-x-6' : 'translate-x-1'}`} />
               </button>
             </div>
+            
+            <ArtworkDetailsSection 
+              gameName={gameName}
+              setGameName={setGameName}
+              characterName={characterName}
+              setCharacterName={setCharacterName}
+              steamBackground={steamBackground}
+              setSteamBackground={setSteamBackground}
+              softwareUsed={softwareUsed}
+              setSoftwareUsed={setSoftwareUsed}
+              styleTags={styleTags}
+              setStyleTags={setStyleTags}
+            />
+
+            <UsageRightsSection 
+              licenseType={licenseType}
+              setLicenseType={setLicenseType}
+              commercialPrice={commercialPrice}
+              setCommercialPrice={setCommercialPrice}
+              isFanArt={isFanArt}
+            />
 
           </div>
 
@@ -198,6 +250,28 @@ export default function UploadPage() {
             
             <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-6 sticky top-24">
               
+              {/* Product Type */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                  Product Type <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <select
+                    value={productType}
+                    onChange={(e) => setProductType(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-white appearance-none focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
+                  >
+                    <option value="artwork">Artwork</option>
+                    <option value="workshop">Workshop</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
+                    <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
               {/* Title */}
               <div>
                 <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
@@ -207,7 +281,7 @@ export default function UploadPage() {
                   type="text" 
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Cyberpunk Neon City"
+                  placeholder="Artwork Title"
                   className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
                 />
               </div>
@@ -253,19 +327,45 @@ export default function UploadPage() {
 
               {/* Color Palette */}
               <div>
-                <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
-                  Primary Color
-                </label>
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    Primary Colors (Max 3)
+                  </label>
+                  <span className="text-xs text-slate-500">{selectedColors.length}/3 selected</span>
+                </div>
                 <div className="flex flex-wrap gap-3">
                   {colors.map(color => (
                     <button
                       key={color}
-                      onClick={() => setSelectedColor(color)}
-                      className={`w-8 h-8 rounded-full transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 ${selectedColor === color ? 'ring-2 ring-white scale-110' : ''}`}
+                      onClick={() => toggleColor(color)}
+                      className={`w-8 h-8 rounded-full transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 ${
+                        selectedColors.includes(color) ? 'ring-2 ring-white scale-110' : ''
+                      } ${color === '#000000' ? 'border border-slate-700' : ''}`}
                       style={{ backgroundColor: color }}
                     />
                   ))}
+                  <button
+                    onClick={() => setShowMoreColors(!showMoreColors)}
+                    className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center hover:bg-slate-700 transition-colors"
+                  >
+                    <Plus className="w-4 h-4 text-slate-400" />
+                  </button>
                 </div>
+                
+                {showMoreColors && (
+                  <div className="mt-3 p-3 bg-slate-950 border border-slate-800 rounded-lg flex flex-wrap gap-2 animate-in fade-in slide-in-from-top-2">
+                    {extendedColors.map(color => (
+                      <button
+                        key={color}
+                        onClick={() => toggleColor(color)}
+                        className={`w-6 h-6 rounded-full transition-transform hover:scale-110 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-offset-slate-950 ${
+                          selectedColors.includes(color) ? 'ring-1 ring-white scale-110' : ''
+                        }`}
+                        style={{ backgroundColor: color }}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Pricing */}

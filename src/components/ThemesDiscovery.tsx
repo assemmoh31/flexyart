@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Filter, X, Check, SlidersHorizontal, LayoutTemplate, PlayCircle, Image as ImageIcon, Eye, Loader2, Star } from 'lucide-react';
+import { Search, Filter, X, Check, SlidersHorizontal, LayoutTemplate, PlayCircle, Image as ImageIcon, Eye, Loader2, Star, Gamepad2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import { SteamPointsIcon } from './SteamPointsIcon';
@@ -54,7 +54,8 @@ export default function ThemesDiscovery() {
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedPrices, setSelectedPrices] = useState<number[]>([]);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Default open on desktop
+  const [activeTab, setActiveTab] = useState<'animated' | 'static'>('animated');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Default closed
   const [isLoading, setIsLoading] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
@@ -100,9 +101,12 @@ export default function ThemesDiscovery() {
       // Price Filter (OR logic)
       const matchesPrice = selectedPrices.length === 0 || selectedPrices.includes(theme.price);
 
-      return matchesSearch && matchesGame && matchesColor && matchesTags && matchesPrice;
+      // Type Filter (Animated vs Static)
+      const matchesType = theme.type === activeTab;
+
+      return matchesSearch && matchesGame && matchesColor && matchesTags && matchesPrice && matchesType;
     });
-  }, [debouncedSearch, selectedGame, selectedColors, selectedTags, selectedPrices]);
+  }, [debouncedSearch, selectedGame, selectedColors, selectedTags, selectedPrices, activeTab]);
 
   // Handlers
   const toggleColor = (hex: string) => {
@@ -130,8 +134,32 @@ export default function ThemesDiscovery() {
   return (
     <div className="flex flex-col gap-6">
       
+      {/* Category Tabs */}
+      <div className="flex items-center gap-2 mb-2 border-b border-slate-800 pb-4">
+        <button
+          onClick={() => setActiveTab('animated')}
+          className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
+            activeTab === 'animated'
+              ? 'bg-purple-500/20 text-purple-400 border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.2)]'
+              : 'bg-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+          }`}
+        >
+          Animated Themes
+        </button>
+        <button
+          onClick={() => setActiveTab('static')}
+          className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
+            activeTab === 'static'
+              ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/50 shadow-[0_0_15px_rgba(34,211,238,0.2)]'
+              : 'bg-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+          }`}
+        >
+          Static Themes
+        </button>
+      </div>
+
       {/* Top Search Bar & Filter Toggle */}
-      <div className="relative w-full z-30 flex gap-4">
+      <div className="relative w-full z-30 flex flex-col sm:flex-row gap-4">
         <div className="relative group flex-1">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
             <Search className="h-5 w-5 text-slate-400 group-focus-within:text-cyan-400 transition-colors" />
@@ -139,13 +167,34 @@ export default function ThemesDiscovery() {
           <input
             type="text"
             className="block w-full rounded-xl border border-slate-800 bg-slate-900/80 backdrop-blur-md py-4 pl-12 pr-4 text-white placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition-all shadow-lg"
-            placeholder="Search themes, games, or tags..."
+            placeholder="Search themes or tags..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           {searchQuery && (
             <button 
               onClick={() => setSearchQuery('')}
+              className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-500 hover:text-white"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          )}
+        </div>
+
+        <div className="relative group w-full sm:w-64">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Gamepad2 className="h-5 w-5 text-slate-400 group-focus-within:text-cyan-400 transition-colors" />
+          </div>
+          <input
+            type="text"
+            className="block w-full rounded-xl border border-slate-800 bg-slate-900/80 backdrop-blur-md py-4 pl-12 pr-4 text-white placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition-all shadow-lg"
+            placeholder="Filter by game..."
+            value={selectedGame}
+            onChange={(e) => setSelectedGame(e.target.value)}
+          />
+          {selectedGame && (
+            <button 
+              onClick={() => setSelectedGame('')}
               className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-500 hover:text-white"
             >
               <X className="h-5 w-5" />
@@ -192,19 +241,7 @@ export default function ThemesDiscovery() {
                 )}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {/* Game Filter */}
-                <div className="space-y-3">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Game</label>
-                  <input 
-                    type="text" 
-                    placeholder="Filter by game..." 
-                    value={selectedGame}
-                    onChange={(e) => setSelectedGame(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500 focus:outline-none transition-colors"
-                  />
-                </div>
-
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {/* Color Palette */}
                 <div className="space-y-3">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Color Palette</label>
@@ -312,82 +349,29 @@ export default function ThemesDiscovery() {
 
           {/* Results Grid */}
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="rounded-3xl bg-slate-900 border border-slate-800 overflow-hidden h-96 animate-pulse">
-                  <div className="h-48 bg-slate-800"></div>
-                  <div className="p-6 space-y-4">
-                    <div className="h-6 bg-slate-800 rounded w-3/4"></div>
-                    <div className="h-4 bg-slate-800 rounded w-1/2"></div>
-                    <div className="flex gap-2 pt-4">
-                      <div className="h-8 bg-slate-800 rounded w-16"></div>
-                      <div className="h-8 bg-slate-800 rounded w-16"></div>
-                    </div>
-                  </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="rounded-3xl bg-slate-900 border border-slate-800 overflow-hidden aspect-[16/10] animate-pulse">
+                  <div className="h-full w-full bg-slate-800"></div>
                 </div>
               ))}
             </div>
           ) : filteredThemes.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {filteredThemes.map((theme) => (
                 <Link 
                   to={`/themes/${theme.id}`} 
                   key={theme.id} 
                   className="group flex flex-col rounded-3xl bg-slate-900/40 backdrop-blur-sm border border-slate-800 overflow-hidden transition-all duration-300 hover:border-cyan-500/50 hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-1"
                 >
-                  <div className="aspect-[16/10] w-full overflow-hidden relative border-b border-slate-800">
+                  <div className="aspect-[16/10] w-full overflow-hidden relative">
                     <img 
                       src={theme.image} 
                       alt={theme.title} 
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                       referrerPolicy="no-referrer"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60"></div>
-                    
-                    {/* Badge */}
-                    <div className="absolute top-3 right-3">
-                      <span className={`px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider border ${
-                        theme.type === 'animated' 
-                          ? 'bg-purple-500/20 border-purple-500/30 text-purple-300' 
-                          : 'bg-cyan-500/20 border-cyan-500/30 text-cyan-300'
-                      }`}>
-                        {theme.type}
-                      </span>
-                    </div>
-
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
-                      <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 bg-cyan-500 text-black px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-[0_0_20px_rgba(34,211,238,0.4)]">
-                        <Eye className="w-5 h-5" /> View Details
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="p-5 flex flex-col flex-1 relative z-10">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors line-clamp-1">{theme.title}</h3>
-                        <p className="text-xs text-slate-500">{theme.game}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-wrap gap-2 mt-3 mb-4">
-                      {theme.tags.slice(0, 3).map(tag => (
-                        <span key={tag} className="text-[10px] uppercase tracking-wide font-medium text-slate-400 bg-slate-800/50 px-2 py-1 rounded-md border border-slate-700/50">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="mt-auto flex items-center justify-between pt-4 border-t border-slate-800/50">
-                      <div className="flex items-center gap-1.5 text-slate-400 text-xs">
-                        <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" /> {theme.rating}
-                      </div>
-                      <div className="flex items-center gap-2 bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800 group-hover:border-cyan-500/30 transition-colors">
-                        <SteamPointsIcon className="w-4 h-4" />
-                        <span className="text-sm font-bold text-white">{theme.price.toLocaleString()}</span>
-                      </div>
-                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent opacity-60"></div>
                   </div>
                 </Link>
               ))}
