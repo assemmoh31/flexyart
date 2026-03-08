@@ -20,31 +20,34 @@ import BackgroundDetail from './pages/BackgroundDetail';
 import Activity from './pages/Activity';
 import { ThemeProvider } from './context/ThemeContext';
 import { CartProvider } from './context/CartContext';
+import { ThemeCategoryProvider } from './context/ThemeCategoryContext';
 
 export default function App() {
   return (
     <ThemeProvider>
       <CartProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Home />} />
-              <Route path="marketplace" element={<Marketplace />} />
-              <Route path="marketplace/:category" element={<Marketplace />} />
-              <Route path="artwork/:id" element={<ArtworkDetail />} />
-              <Route path="creator/:handle" element={<ProfileEditor />} />
-              <Route path="tools" element={<Tools />} />
-              <Route path="themes" element={<Themes />} />
-              <Route path="themes/:id" element={<BackgroundDetail />} />
-              <Route path="pricing" element={<Pricing />} />
-              <Route path="upload" element={<UploadPage />} />
-              <Route path="promote" element={<Promote />} />
-              <Route path="studio" element={<CreatorStudio />} />
-              <Route path="admin" element={<AdminDashboard />} />
-              <Route path="activity" element={<Activity />} />
-            </Route>
-          </Routes>
-        </Router>
+        <ThemeCategoryProvider>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Home />} />
+                <Route path="marketplace" element={<Marketplace />} />
+                <Route path="marketplace/:category" element={<Marketplace />} />
+                <Route path="artwork/:id" element={<ArtworkDetail />} />
+                <Route path="creator/:handle" element={<ProfileEditor />} />
+                <Route path="tools" element={<Tools />} />
+                <Route path="themes" element={<Themes />} />
+                <Route path="themes/:id" element={<BackgroundDetail />} />
+                <Route path="pricing" element={<Pricing />} />
+                <Route path="upload" element={<UploadPage />} />
+                <Route path="promote" element={<Promote />} />
+                <Route path="studio" element={<CreatorStudio />} />
+                <Route path="admin" element={<AdminDashboard />} />
+                <Route path="activity" element={<Activity />} />
+              </Route>
+            </Routes>
+          </Router>
+        </ThemeCategoryProvider>
       </CartProvider>
     </ThemeProvider>
   );
