@@ -71,7 +71,7 @@ export default function ThemeManager() {
     const files = Array.from(e.target.files || []);
     if (files.length > 0) {
       setPreviewFiles(prev => [...prev, ...files]);
-      setPreviewUrls(prev => [...prev, ...files.map(f => URL.createObjectURL(f))]);
+      setPreviewUrls(prev => [...prev, ...files.map((f: any) => URL.createObjectURL(f))]);
     }
   };
 
@@ -84,7 +84,7 @@ export default function ThemeManager() {
     const files = Array.from(e.dataTransfer.files || []);
     if (files.length > 0) {
       setPreviewFiles(prev => [...prev, ...files]);
-      setPreviewUrls(prev => [...prev, ...files.map(f => URL.createObjectURL(f))]);
+      setPreviewUrls(prev => [...prev, ...files.map((f: any) => URL.createObjectURL(f))]);
     }
   };
 
@@ -536,7 +536,7 @@ export default function ThemeManager() {
 }
 
 // Admin Theme Card Component with Hover-to-Play
-function AdminThemeCard({ theme }: { theme: any }) {
+const AdminThemeCard: React.FC<{ theme: any }> = ({ theme }) => {
   const [isHovered, setIsHovered] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 

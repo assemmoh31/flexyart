@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Settings, MapPin, Calendar, Link as LinkIcon, Twitter, Instagram, Github, X, Image as ImageIcon, Check, Monitor, Smartphone, Upload, Video, Layout, Type, Palette, Layers, Star, MessageSquare, Edit3 } from 'lucide-react';
+import { Settings, MapPin, Calendar, Link as LinkIcon, Twitter, Instagram, Github, X, Image as ImageIcon, Check, Monitor, Smartphone, Upload, Video, Layout, Type, Palette, Layers, Star, MessageSquare, Edit3, ChevronDown } from 'lucide-react';
+import { Reorder } from 'motion/react';
+import StudioBuilderSidebar from '../components/studio/StudioBuilderSidebar';
+import DraggableProfileSection from '../components/studio/DraggableProfileSection';
+import { HeroSection, FeaturedSection, ShopSection, ProcessSection, BioSection } from '../components/studio/ProfileSections';
 
 // Mock data
 const creatorData = {
@@ -30,8 +34,27 @@ const creatorData = {
     { id: 1, title: 'Cyberpunk Neon City', price: '$15.00', image: 'https://picsum.photos/seed/cyber1/600/400', type: 'Animated', category: 'Sci-Fi' },
     { id: 10, title: 'Neon Alleyway', price: '$12.00', image: 'https://picsum.photos/seed/alley1/600/400', type: 'Animated', category: 'Sci-Fi' },
     { id: 11, title: 'Holographic UI', price: '$8.00', image: 'https://picsum.photos/seed/holo1/600/400', type: 'Static', category: 'Tech' },
+  ],
+  shopArtworks: [
+    { id: 1, title: 'Cyberpunk Neon City', creator: '@NeonDreams', creatorRevenue: 3000, price: '$15.00', image: 'https://picsum.photos/seed/cyber1/600/400', type: 'Animated', category: 'Sci-Fi' },
+    { id: 2, title: 'Ethereal Forest', creator: '@NatureVibes', creatorRevenue: 1800, price: '$12.50', image: 'https://picsum.photos/seed/forest1/600/400', type: 'Static', category: 'Fantasy' },
+    { id: 3, title: 'Retro Synthwave', creator: '@SynthLord', creatorRevenue: 1200, price: '$20.00', image: 'https://picsum.photos/seed/synth1/600/400', type: 'Animated', category: 'Retro' },
+    { id: 4, title: 'Dark Fantasy Knight', creator: '@GrimArt', creatorRevenue: 400, price: '$18.00', image: 'https://picsum.photos/seed/knight1/600/400', type: 'Theme Bundle', category: 'Fantasy' },
+    { id: 5, title: 'Minimalist Setup', creator: '@CleanDesk', creatorRevenue: 80, price: '$10.00', image: 'https://picsum.photos/seed/minimal1/600/400', type: 'Static', category: 'Minimal' },
+    { id: 6, title: 'Galactic Horizon', creator: '@SpaceCadet', creatorRevenue: 20, price: '$25.00', image: 'https://picsum.photos/seed/space1/600/400', type: 'Animated', category: 'Sci-Fi' },
+    { id: 7, title: 'Anime Aesthetic', creator: '@WeebArt', creatorRevenue: 2600, price: '$14.00', image: 'https://picsum.photos/seed/anime1/600/400', type: 'Animated', category: 'Anime' },
+    { id: 8, title: 'Gothic Castle', creator: '@DarkVibes', creatorRevenue: 1600, price: '$16.00', image: 'https://picsum.photos/seed/gothic1/600/400', type: 'Static', category: 'Fantasy' },
+    { id: 9, title: 'Pixel Art City', creator: '@RetroPixel', creatorRevenue: 1100, price: '$8.00', image: 'https://picsum.photos/seed/pixel1/600/400', type: 'Animated', category: 'Retro' },
   ]
 };
+
+const initialSections = [
+  { id: 'hero', title: 'Hero Banner & Promo', isVisible: true },
+  { id: 'featured', title: 'Featured Magnum Opus', isVisible: true },
+  { id: 'shop', title: 'Product Collections', isVisible: true },
+  { id: 'process', title: 'Design Process (Before/After)', isVisible: true },
+  { id: 'bio', title: 'Creator Bio', isVisible: true },
+];
 
 export default function ProfileEditor() {
   const { handle } = useParams();
@@ -54,6 +77,28 @@ export default function ProfileEditor() {
   const [bioText, setBioText] = useState(creatorData.bio);
   const [featuredVideo, setFeaturedVideo] = useState<string | null>(null);
 
+  // Builder State
+  const [sections, setSections] = useState(initialSections);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [themeSettings, setThemeSettings] = useState({
+    primaryColor: '#00BCD4',
+    fontFamily: 'Inter',
+    shopLayout: 'grid',
+    processType: 'static',
+    processBeforeMedia: 'https://picsum.photos/seed/before/1000/500?grayscale',
+    processAfterMedia: 'https://picsum.photos/seed/after/1000/500',
+  });
+  const [isCustomLayoutSaved, setIsCustomLayoutSaved] = useState(false);
+
+  const handleToggleVisibility = (id: string) => {
+    setSections(sections.map(s => s.id === id ? { ...s, isVisible: !s.isVisible } : s));
+  };
+
+  const handleSave = () => {
+    setIsCustomLayoutSaved(true);
+    setIsDesignMode(false);
+  };
+
   const customStyles = {
     '--profile-theme': themeColor,
     '--profile-text': textColor,
@@ -72,7 +117,7 @@ export default function ProfileEditor() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col relative overflow-hidden" style={customStyles}>
+    <div className="min-h-screen bg-slate-950 flex flex-col relative overflow-hidden font-sans" style={{ ...customStyles, fontFamily: themeSettings.fontFamily }}>
       
       {/* Immersive Background (Parallax) */}
       {backgroundMedia && (
@@ -123,8 +168,8 @@ export default function ProfileEditor() {
                   : 'bg-slate-800 text-white hover:bg-slate-700 border border-slate-700'
               }`}
             >
-              {isDesignMode ? <Check className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
-              {isDesignMode ? 'Save & Exit' : 'Design Mode'}
+              {isDesignMode ? <X className="w-4 h-4" /> : <Layout className="w-4 h-4" />}
+              {isDesignMode ? 'Exit Builder' : 'Profile Builder'}
             </button>
           </div>
         </div>
@@ -135,7 +180,6 @@ export default function ProfileEditor() {
         <div className={`flex-1 overflow-y-auto transition-all duration-300 ${isDesignMode && viewMode === 'desktop' ? 'mr-80' : ''}`}>
           <div className={`mx-auto transition-all duration-300 ${viewMode === 'mobile' ? 'max-w-md border-x border-slate-800 bg-slate-950 min-h-screen shadow-2xl' : 'w-full'}`}>
             
-            {/* The "Spotlight" Hero Layout */}
             <div className="relative">
               {/* Custom Banner */}
               <div className="relative h-64 md:h-80 lg:h-96 w-full bg-slate-900 overflow-hidden group">
@@ -224,66 +268,139 @@ export default function ProfileEditor() {
 
                 {/* Tab Content */}
                 <div className="pb-24">
-                  {activeTab === 'home' && (
-                    <div className="space-y-16">
-                      {/* Featured Showcase (Magnum Opus) */}
-                      <section>
-                        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2" style={{ color: 'var(--profile-text)' }}>
-                          <Star className="w-6 h-6" style={{ color: 'var(--profile-theme)' }} /> Featured Showcase
-                        </h2>
-                        <div className={`rounded-2xl bg-slate-900/80 backdrop-blur-md border border-slate-800 overflow-hidden flex flex-col lg:flex-row shadow-2xl relative ${textureOverlay !== 'none' ? `texture-${textureOverlay}` : ''}`}>
-                          <div className="lg:w-2/3 bg-slate-950 flex items-center justify-center p-0 relative aspect-video">
-                            {featuredVideo || isVideo(creatorData.featuredArtwork.image) ? (
-                              <video autoPlay loop muted playsInline className="w-full h-full object-cover">
-                                <source src={featuredVideo || creatorData.featuredArtwork.image} type="video/mp4" />
-                              </video>
-                            ) : (
-                              <img 
-                                src={creatorData.featuredArtwork.image} 
-                                alt={creatorData.featuredArtwork.title} 
-                                className="w-full h-full object-cover"
-                                referrerPolicy="no-referrer"
-                              />
-                            )}
-                          </div>
-                          <div className="lg:w-1/3 p-8 flex flex-col justify-center">
-                            <span className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--profile-theme)' }}>
-                              {creatorData.featuredArtwork.type}
-                            </span>
-                            <h3 className="text-3xl font-bold mb-4" style={{ color: 'var(--profile-text)' }}>
-                              {creatorData.featuredArtwork.title}
-                            </h3>
-                            <p className="text-slate-400 leading-relaxed mb-8">
-                              {creatorData.featuredArtwork.description}
-                            </p>
-                            <Link 
-                              to={`/artwork/${creatorData.featuredArtwork.id}`}
-                              className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-bold text-black transition-transform hover:scale-105 shadow-[0_0_20px_rgba(0,188,212,0.3)]"
-                              style={{ backgroundColor: 'var(--profile-theme)' }}
-                            >
-                              View Details
-                            </Link>
-                          </div>
-                        </div>
-                      </section>
+                  {(!isCustomLayoutSaved && !isDesignMode) ? (
+                    <>
+                      {activeTab === 'home' && (
+                        <div className="space-y-16">
+                          {/* Featured Showcase (Magnum Opus) */}
+                          <section>
+                            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2" style={{ color: 'var(--profile-text)' }}>
+                              <Star className="w-6 h-6" style={{ color: 'var(--profile-theme)' }} /> Featured Showcase
+                            </h2>
+                            <div className={`rounded-2xl bg-slate-900/80 backdrop-blur-md border border-slate-800 overflow-hidden flex flex-col lg:flex-row shadow-2xl relative ${textureOverlay !== 'none' ? `texture-${textureOverlay}` : ''}`}>
+                              <div className="lg:w-2/3 bg-slate-950 flex items-center justify-center p-0 relative aspect-video">
+                                {featuredVideo || isVideo(creatorData.featuredArtwork.image) ? (
+                                  <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+                                    <source src={featuredVideo || creatorData.featuredArtwork.image} type="video/mp4" />
+                                  </video>
+                                ) : (
+                                  <img 
+                                    src={creatorData.featuredArtwork.image} 
+                                    alt={creatorData.featuredArtwork.title} 
+                                    className="w-full h-full object-cover"
+                                    referrerPolicy="no-referrer"
+                                  />
+                                )}
+                              </div>
+                              <div className="lg:w-1/3 p-8 flex flex-col justify-center">
+                                <span className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--profile-theme)' }}>
+                                  {creatorData.featuredArtwork.type}
+                                </span>
+                                <h3 className="text-3xl font-bold mb-4" style={{ color: 'var(--profile-text)' }}>
+                                  {creatorData.featuredArtwork.title}
+                                </h3>
+                                <p className="text-slate-400 leading-relaxed mb-8">
+                                  {creatorData.featuredArtwork.description}
+                                </p>
+                                <Link 
+                                  to={`/artwork/${creatorData.featuredArtwork.id}`}
+                                  className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-bold text-black transition-transform hover:scale-105 shadow-[0_0_20px_rgba(0,188,212,0.3)]"
+                                  style={{ backgroundColor: 'var(--profile-theme)' }}
+                                >
+                                  View Details
+                                </Link>
+                              </div>
+                            </div>
+                          </section>
 
-                      {/* Recent Uploads */}
-                      <section>
-                        <div className="flex items-center justify-between mb-6">
-                          <h2 className="text-xl font-bold" style={{ color: 'var(--profile-text)' }}>Recent Uploads</h2>
-                          <button onClick={() => setActiveTab('shop')} className="text-sm font-medium hover:underline" style={{ color: 'var(--profile-theme)' }}>
-                            View All
-                          </button>
+                          {/* Recent Uploads */}
+                          <section>
+                            <div className="flex items-center justify-between mb-6">
+                              <h2 className="text-xl font-bold" style={{ color: 'var(--profile-text)' }}>Recent Uploads</h2>
+                              <button onClick={() => setActiveTab('shop')} className="text-sm font-medium hover:underline" style={{ color: 'var(--profile-theme)' }}>
+                                View All
+                              </button>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                              {creatorData.recentUploads.map((artwork) => (
+                                <ArtworkCard key={artwork.id} artwork={artwork} themeColor={themeColor} textColor={textColor} textureOverlay={textureOverlay} />
+                              ))}
+                            </div>
+                          </section>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                          {creatorData.recentUploads.map((artwork) => (
-                            <ArtworkCard key={artwork.id} artwork={artwork} themeColor={themeColor} textColor={textColor} textureOverlay={textureOverlay} />
+                      )}
+                      
+                      {activeTab === 'shop' && (
+                        <div className="space-y-8">
+                          {/* Sort & Results Bar */}
+                          <div className="flex items-center justify-between bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+                            <span className="text-sm text-slate-400">Showing <strong className="text-white">1-{creatorData.shopArtworks.length}</strong> of {creatorData.shopArtworks.length} results</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm text-slate-400">Sort by:</span>
+                              <button className="flex items-center gap-2 text-sm font-medium text-white hover:text-cyan-400 transition-colors">
+                                Trending <ChevronDown className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Grid */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {creatorData.shopArtworks.map((artwork) => (
+                              <ArtworkCard key={artwork.id} artwork={artwork} themeColor={themeColor} textColor={textColor} textureOverlay={textureOverlay} />
+                            ))}
+                          </div>
+                          
+                          {/* Pagination */}
+                          <div className="mt-12 flex justify-center">
+                            <nav className="flex items-center gap-2">
+                              <button className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-colors disabled:opacity-50" disabled>Previous</button>
+                              <button className="rounded-md border border-cyan-500 bg-cyan-500/10 px-4 py-2 text-sm font-bold text-cyan-400">1</button>
+                              <button className="rounded-md border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">2</button>
+                              <button className="rounded-md border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">3</button>
+                              <span className="text-slate-500 px-2">...</span>
+                              <button className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">Next</button>
+                            </nav>
+                          </div>
+                        </div>
+                      )}
+                      {/* Other tabs would go here */}
+                    </>
+                  ) : (
+                    // Custom Layout
+                    <div className={`relative mx-auto transition-all duration-500 ease-in-out w-full`}>
+                      {isDesignMode ? (
+                        <Reorder.Group axis="y" values={sections} onReorder={setSections} className="space-y-6">
+                          {sections.map(section => (
+                            <DraggableProfileSection 
+                              key={section.id} 
+                              item={section}
+                              isActive={activeSection === section.id}
+                              onToggleVisibility={handleToggleVisibility}
+                              onSettingsClick={setActiveSection}
+                            >
+                              {section.id === 'hero' && <HeroSection previewMode={viewMode} />}
+                              {section.id === 'featured' && <FeaturedSection primaryColor={themeSettings.primaryColor} />}
+                              {section.id === 'shop' && <ShopSection layout={themeSettings.shopLayout} primaryColor={themeSettings.primaryColor} />}
+                              {section.id === 'process' && <ProcessSection type={themeSettings.processType} beforeMedia={themeSettings.processBeforeMedia} afterMedia={themeSettings.processAfterMedia} />}
+                              {section.id === 'bio' && <BioSection />}
+                            </DraggableProfileSection>
+                          ))}
+                        </Reorder.Group>
+                      ) : (
+                        <div className="space-y-6">
+                          {sections.filter(s => s.isVisible).map(section => (
+                            <div key={section.id} className="bg-slate-900/30 backdrop-blur-md border border-slate-800/50 rounded-2xl p-6">
+                              {section.id === 'hero' && <HeroSection previewMode={viewMode} />}
+                              {section.id === 'featured' && <FeaturedSection primaryColor={themeSettings.primaryColor} />}
+                              {section.id === 'shop' && <ShopSection layout={themeSettings.shopLayout} primaryColor={themeSettings.primaryColor} />}
+                              {section.id === 'process' && <ProcessSection type={themeSettings.processType} beforeMedia={themeSettings.processBeforeMedia} afterMedia={themeSettings.processAfterMedia} />}
+                              {section.id === 'bio' && <BioSection />}
+                            </div>
                           ))}
                         </div>
-                      </section>
+                      )}
                     </div>
                   )}
-                  {/* Other tabs would go here */}
                 </div>
               </div>
             </div>
@@ -292,161 +409,19 @@ export default function ProfileEditor() {
 
         {/* Design Studio Sidebar */}
         {isDesignMode && (
-          <div className="w-80 bg-slate-900 border-l border-slate-800 flex flex-col z-40 shadow-2xl shrink-0 absolute right-0 top-0 bottom-0 h-full">
-            <div className="p-5 border-b border-slate-800 bg-slate-950">
-              <h2 className="font-bold text-white flex items-center gap-2 text-lg">
-                <Palette className="w-5 h-5 text-cyan-400" /> Design Studio
-              </h2>
-              <p className="text-xs text-slate-400 mt-1">Customize your storefront personality</p>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-5 space-y-8 no-scrollbar">
-              
-              {/* Immersive Background */}
-              <div>
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <Layout className="w-4 h-4" /> The Stage (Background)
-                </h3>
-                <div className="relative h-24 w-full rounded-xl border-2 border-dashed border-slate-700 bg-slate-950 overflow-hidden group cursor-pointer hover:border-cyan-500 transition-colors">
-                  {backgroundMedia ? (
-                    isVideo(backgroundMedia) ? (
-                      <video autoPlay loop muted playsInline className="w-full h-full object-cover opacity-50"><source src={backgroundMedia} type="video/mp4" /></video>
-                    ) : (
-                      <img src={backgroundMedia} alt="Background" className="w-full h-full object-cover opacity-50" />
-                    )
-                  ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-500 group-hover:text-cyan-400 transition-colors">
-                      <Upload className="h-5 w-5 mb-1" />
-                      <span className="text-xs font-medium">Upload Full-Page Wrap</span>
-                    </div>
-                  )}
-                  <input type="file" accept="image/*,video/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleMediaUpload(e, setBackgroundMedia)} />
-                </div>
-                {backgroundMedia && (
-                  <button onClick={() => setBackgroundMedia(null)} className="text-xs text-red-400 mt-2 hover:underline">Remove Background</button>
-                )}
-              </div>
-
-              {/* Brand Colors */}
-              <div>
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <Palette className="w-4 h-4" /> Brand Colors
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-xs text-slate-500 block mb-2">Primary Accent</label>
-                    <div className="flex flex-wrap gap-2">
-                      {['#00BCD4', '#a855f7', '#ec4899', '#f43f5e', '#FFD700', '#10b981', '#3b82f6'].map(color => (
-                        <button
-                          key={color}
-                          onClick={() => setThemeColor(color)}
-                          className="h-8 w-8 rounded-full flex items-center justify-center transition-transform hover:scale-110 border border-slate-700"
-                          style={{ backgroundColor: color }}
-                        >
-                          {themeColor === color && <Check className="h-4 w-4 text-slate-950 drop-shadow-md" />}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-xs text-slate-500 block mb-2">Text Color</label>
-                    <div className="flex flex-wrap gap-2">
-                      {['#f8fafc', '#e2e8f0', '#cbd5e1', '#94a3b8', '#00BCD4', '#a855f7'].map(color => (
-                        <button
-                          key={color}
-                          onClick={() => setTextColor(color)}
-                          className="h-8 w-8 rounded-full flex items-center justify-center border border-slate-700 transition-transform hover:scale-110"
-                          style={{ backgroundColor: color }}
-                        >
-                          {textColor === color && <Check className="h-4 w-4 text-slate-900 drop-shadow-md" />}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Texture Overlays */}
-              <div>
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <Layers className="w-4 h-4" /> Texture Overlays
-                </h3>
-                <div className="space-y-2">
-                  {[
-                    { id: 'none', label: 'Clean (None)' },
-                    { id: 'noise', label: 'Digital Noise' },
-                    { id: 'scanlines', label: 'CRT Scanlines' },
-                    { id: 'grain', label: 'Film Grain' }
-                  ].map(overlay => (
-                    <label key={overlay.id} className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${textureOverlay === overlay.id ? 'bg-slate-800 border-cyan-500' : 'bg-slate-950 border-slate-800 hover:border-slate-700'}`}>
-                      <input 
-                        type="radio" 
-                        name="texture" 
-                        value={overlay.id} 
-                        checked={textureOverlay === overlay.id}
-                        onChange={() => setTextureOverlay(overlay.id as any)}
-                        className="accent-cyan-500"
-                      />
-                      <span className="text-sm text-white">{overlay.label}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Modular Blocks */}
-              <div>
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <Layout className="w-4 h-4" /> Modular Blocks
-                </h3>
-                <div className="space-y-4">
-                  {/* Bio Edit */}
-                  <div>
-                    <label className="text-xs text-slate-500 block mb-2">About the Artist</label>
-                    <textarea 
-                      value={bioText}
-                      onChange={(e) => setBioText(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-cyan-500 h-24 resize-none"
-                    />
-                  </div>
-                  
-                  {/* Commission Status */}
-                  <div>
-                    <label className="text-xs text-slate-500 block mb-2">Commission Status</label>
-                    <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
-                      <button 
-                        onClick={() => setCommissionStatus('open')}
-                        className={`flex-1 py-2 text-sm font-medium rounded-lg transition-colors ${commissionStatus === 'open' ? 'bg-emerald-500/20 text-emerald-400 shadow-sm' : 'text-slate-400 hover:text-white'}`}
-                      >
-                        Open
-                      </button>
-                      <button 
-                        onClick={() => setCommissionStatus('closed')}
-                        className={`flex-1 py-2 text-sm font-medium rounded-lg transition-colors ${commissionStatus === 'closed' ? 'bg-red-500/20 text-red-400 shadow-sm' : 'text-slate-400 hover:text-white'}`}
-                      >
-                        Closed
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Featured Video */}
-                  <div>
-                    <label className="text-xs text-slate-500 block mb-2">Featured Showcase (Video/Image)</label>
-                    <div className="relative h-20 w-full rounded-xl border-2 border-dashed border-slate-700 bg-slate-950 overflow-hidden group cursor-pointer hover:border-cyan-500 transition-colors">
-                      {featuredVideo ? (
-                        <video autoPlay loop muted playsInline className="w-full h-full object-cover opacity-50"><source src={featuredVideo} type="video/mp4" /></video>
-                      ) : (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-500 group-hover:text-cyan-400 transition-colors">
-                          <Video className="h-4 w-4 mb-1" />
-                          <span className="text-xs font-medium">Upload Media</span>
-                        </div>
-                      )}
-                      <input type="file" accept="video/*,image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleMediaUpload(e, setFeaturedVideo)} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
+          <div className="fixed right-0 top-[61px] bottom-0 h-[calc(100vh-61px)] z-40">
+            <StudioBuilderSidebar 
+              sections={sections}
+              onReorder={setSections}
+              onToggleVisibility={handleToggleVisibility}
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
+              previewMode={viewMode}
+              setPreviewMode={setViewMode}
+              themeSettings={themeSettings}
+              setThemeSettings={setThemeSettings}
+              onSave={handleSave}
+            />
           </div>
         )}
       </div>

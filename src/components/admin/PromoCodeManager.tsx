@@ -31,7 +31,7 @@ export default function PromoCodeManager() {
           <p className="text-slate-400 text-sm">Create and manage discount codes for marketing campaigns.</p>
         </div>
         <button 
-          onClick={() => document.getElementById('add-promo-modal')?.showModal()}
+          onClick={() => (document.getElementById('add-promo-modal') as HTMLDialogElement)?.showModal()}
           className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 shadow-[0_0_15px_rgba(6,182,212,0.4)] transition-all"
         >
           <Plus className="w-4 h-4" /> Create New Code
@@ -108,8 +108,8 @@ export default function PromoCodeManager() {
           <input type="text" placeholder="Code (e.g. SUMMER24)" className="w-full bg-slate-950 border border-slate-800 p-2 rounded" />
           <input type="text" placeholder="Discount %" className="w-full bg-slate-950 border border-slate-800 p-2 rounded" />
           <div className="flex justify-end gap-2 mt-6">
-            <button className="px-4 py-2 text-slate-400 hover:text-white" onClick={() => document.getElementById('add-promo-modal')?.close()}>Cancel</button>
-            <button className="px-4 py-2 bg-cyan-500 text-white rounded hover:bg-cyan-600" onClick={() => document.getElementById('add-promo-modal')?.close()}>Create</button>
+            <button className="px-4 py-2 text-slate-400 hover:text-white" onClick={() => (document.getElementById('add-promo-modal') as HTMLDialogElement)?.close()}>Cancel</button>
+            <button className="px-4 py-2 bg-cyan-500 text-white rounded hover:bg-cyan-600" onClick={() => (document.getElementById('add-promo-modal') as HTMLDialogElement)?.close()}>Create</button>
           </div>
         </div>
       </dialog>

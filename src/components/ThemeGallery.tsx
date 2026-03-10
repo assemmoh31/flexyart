@@ -422,7 +422,7 @@ export default function ThemeGallery({ category }: ThemeGalleryProps) {
 }
 
 // --- Theme Card Component ---
-const ThemeCard = ({ theme, category }: { theme: Theme, category: ThemeCategory }) => {
+const ThemeCard: React.FC<{ theme: Theme, category: ThemeCategory }> = ({ theme, category }) => {
   const [isHovered, setIsHovered] = useState(false);
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
