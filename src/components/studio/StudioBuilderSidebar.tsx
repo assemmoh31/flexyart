@@ -26,6 +26,9 @@ interface StudioBuilderSidebarProps {
   themeSettings: any;
   setThemeSettings: (settings: any) => void;
   onSave: () => void;
+  pageTab?: string;
+  shopSettings?: any;
+  setShopSettings?: (settings: any) => void;
 }
 
 export default function StudioBuilderSidebar({
@@ -38,7 +41,10 @@ export default function StudioBuilderSidebar({
   setPreviewMode,
   themeSettings,
   setThemeSettings,
-  onSave
+  onSave,
+  pageTab = 'home',
+  shopSettings,
+  setShopSettings
 }: StudioBuilderSidebarProps) {
   const [activeTab, setActiveTab] = useState<'layout' | 'theme'>('layout');
   const settingsRef = useRef<HTMLDivElement>(null);
@@ -69,7 +75,7 @@ export default function StudioBuilderSidebar({
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
-        {activeTab === 'layout' && (
+        {activeTab === 'layout' && pageTab === 'home' && (
           <div className="space-y-6">
             <div>
               <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
@@ -208,6 +214,95 @@ export default function StudioBuilderSidebar({
                 )}
               </div>
             )}
+          </div>
+        )}
+
+        {activeTab === 'layout' && pageTab === 'shop' && shopSettings && setShopSettings && (
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                <Layers className="w-4 h-4 text-slate-400" /> Shop Layout
+              </h3>
+              <div className="grid grid-cols-2 gap-2">
+                {['grid', 'masonry', 'showcase', 'carousel'].map(layout => (
+                  <button 
+                    key={layout}
+                    onClick={() => setShopSettings({...shopSettings, layout, isCustomized: true})}
+                    className={`flex flex-col items-center justify-center gap-2 p-3 rounded-lg border transition-colors ${shopSettings.layout === layout ? 'bg-cyan-500/20 border-cyan-500 text-cyan-400' : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'}`}
+                  >
+                    {layout === 'grid' && <Grid className="w-5 h-5" />}
+                    {layout === 'masonry' && <Columns className="w-5 h-5" />}
+                    {layout === 'showcase' && <Monitor className="w-5 h-5" />}
+                    {layout === 'carousel' && <Maximize className="w-5 h-5" />}
+                    <span className="text-xs capitalize">{layout}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                <LayoutTemplate className="w-4 h-4 text-slate-400" /> Preview Style
+              </h3>
+              <select 
+                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500 focus:outline-none"
+                value={shopSettings.previewStyle}
+                onChange={(e) => setShopSettings({...shopSettings, previewStyle: e.target.value, isCustomized: true})}
+              >
+                <option value="default">Default Grid</option>
+                <option value="art-train">Art Train</option>
+                <option value="spotlight-carousel">Spotlight Carousel</option>
+                <option value="wave-gallery">Wave Gallery</option>
+                <option value="art-deck">Art Deck</option>
+                <option value="gallery-window">Gallery Window</option>
+                <option value="art-orbit">Art Orbit</option>
+                <option value="flip-gallery">Flip Gallery</option>
+                <option value="art-reel">Art Reel</option>
+                <option value="spotlight-slider">Spotlight Slider</option>
+                <option value="infinite-gallery">Infinite Gallery</option>
+              </select>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                <Layers className="w-4 h-4 text-slate-400" /> Organization
+              </h3>
+              <div className="space-y-3">
+                <label className="flex items-center justify-between text-sm text-slate-300 cursor-pointer p-3 bg-slate-900 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+                  <span>Featured Artworks</span>
+                  <input 
+                    type="checkbox" 
+                    className="rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500" 
+                    checked={shopSettings.showFeatured}
+                    onChange={(e) => setShopSettings({...shopSettings, showFeatured: e.target.checked, isCustomized: true})}
+                  />
+                </label>
+                <label className="flex items-center justify-between text-sm text-slate-300 cursor-pointer p-3 bg-slate-900 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+                  <span>Limited Edition</span>
+                  <input 
+                    type="checkbox" 
+                    className="rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500" 
+                    checked={shopSettings.showLimited}
+                    onChange={(e) => setShopSettings({...shopSettings, showLimited: e.target.checked, isCustomized: true})}
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-slate-800">
+              <button 
+                onClick={() => setShopSettings({
+                  layout: 'grid',
+                  previewStyle: 'default',
+                  showFeatured: true,
+                  showLimited: true,
+                  isCustomized: false
+                })}
+                className="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-2 rounded-lg transition-colors text-sm"
+              >
+                Reset to Default
+              </button>
+            </div>
           </div>
         )}
 

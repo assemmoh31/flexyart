@@ -88,6 +88,13 @@ export default function ProfileEditor() {
     processBeforeMedia: 'https://picsum.photos/seed/before/1000/500?grayscale',
     processAfterMedia: 'https://picsum.photos/seed/after/1000/500',
   });
+  const [shopSettings, setShopSettings] = useState({
+    layout: 'grid', // grid, masonry, showcase, carousel
+    previewStyle: 'default', // art-train, spotlight-carousel, wave-gallery, etc.
+    showFeatured: true,
+    showLimited: true,
+    isCustomized: false,
+  });
   const [isCustomLayoutSaved, setIsCustomLayoutSaved] = useState(false);
 
   const handleToggleVisibility = (id: string) => {
@@ -97,6 +104,7 @@ export default function ProfileEditor() {
   const handleSave = () => {
     setIsCustomLayoutSaved(true);
     setIsDesignMode(false);
+    setActiveSection(null);
   };
 
   const customStyles = {
@@ -157,20 +165,6 @@ export default function ProfileEditor() {
                 </button>
               </div>
             )}
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={() => setIsDesignMode(!isDesignMode)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
-                isDesignMode 
-                  ? 'bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(0,188,212,0.4)]' 
-                  : 'bg-slate-800 text-white hover:bg-slate-700 border border-slate-700'
-              }`}
-            >
-              {isDesignMode ? <X className="w-4 h-4" /> : <Layout className="w-4 h-4" />}
-              {isDesignMode ? 'Exit Builder' : 'Profile Builder'}
-            </button>
           </div>
         </div>
       )}
@@ -268,7 +262,7 @@ export default function ProfileEditor() {
 
                 {/* Tab Content */}
                 <div className="pb-24">
-                  {(!isCustomLayoutSaved && !isDesignMode) ? (
+                  {(!isCustomLayoutSaved && (!isDesignMode || activeSection === null)) ? (
                     <>
                       {activeTab === 'home' && (
                         <div className="space-y-16">
@@ -343,12 +337,91 @@ export default function ProfileEditor() {
                             </div>
                           </div>
 
-                          {/* Grid */}
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {creatorData.shopArtworks.map((artwork) => (
-                              <ArtworkCard key={artwork.id} artwork={artwork} themeColor={themeColor} textColor={textColor} textureOverlay={textureOverlay} />
-                            ))}
-                          </div>
+                          {/* Grid / Layout */}
+                          {shopSettings.showFeatured && (
+                            <div className="mb-12">
+                              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                                <span className="w-2 h-6 bg-cyan-500 rounded-full"></span>
+                                Featured Artworks
+                              </h3>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                {creatorData.shopArtworks.slice(0, 2).map((artwork) => (
+                                  <ArtworkCard key={artwork.id} artwork={artwork} themeColor={themeColor} textColor={textColor} textureOverlay={textureOverlay} />
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {shopSettings.showLimited && (
+                            <div className="mb-12">
+                              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                                <span className="w-2 h-6 bg-purple-500 rounded-full"></span>
+                                Limited Edition
+                              </h3>
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                                {creatorData.shopArtworks.slice(2, 5).map((artwork) => (
+                                  <div key={artwork.id} className="relative">
+                                    <div className="absolute top-2 right-2 z-10 bg-slate-900/80 backdrop-blur-md border border-slate-700 text-xs font-bold px-2 py-1 rounded-md text-purple-400">
+                                      Only 5 left
+                                    </div>
+                                    <ArtworkCard artwork={artwork} themeColor={themeColor} textColor={textColor} textureOverlay={textureOverlay} />
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                            <span className="w-2 h-6 bg-slate-500 rounded-full"></span>
+                            All Artworks
+                          </h3>
+
+                          {(!shopSettings.isCustomized || shopSettings.layout === 'grid') && shopSettings.previewStyle === 'default' && (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                              {creatorData.shopArtworks.map((artwork) => (
+                                <ArtworkCard key={artwork.id} artwork={artwork} themeColor={themeColor} textColor={textColor} textureOverlay={textureOverlay} />
+                              ))}
+                            </div>
+                          )}
+
+                          {shopSettings.isCustomized && shopSettings.previewStyle === 'art-train' && (
+                            <div className="art-train-container">
+                              {creatorData.shopArtworks.map((artwork, idx) => (
+                                <div key={artwork.id} className={`art-train-item ${idx === 1 ? 'active' : ''}`}>
+                                  <ArtworkCard artwork={artwork} themeColor={themeColor} textColor={textColor} textureOverlay={textureOverlay} />
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {shopSettings.isCustomized && shopSettings.previewStyle === 'spotlight-carousel' && (
+                            <div className="spotlight-carousel-container">
+                              {creatorData.shopArtworks.slice(0, 3).map((artwork, idx) => (
+                                <div key={artwork.id} className={`spotlight-item ${idx === 0 ? 'prev' : idx === 1 ? 'active' : 'next'}`}>
+                                  <ArtworkCard artwork={artwork} themeColor={themeColor} textColor={textColor} textureOverlay={textureOverlay} />
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {shopSettings.isCustomized && shopSettings.previewStyle === 'infinite-gallery' && (
+                            <div className="overflow-hidden py-8">
+                              <div className="infinite-gallery-track">
+                                {[...creatorData.shopArtworks, ...creatorData.shopArtworks].map((artwork, idx) => (
+                                  <div key={`${artwork.id}-${idx}`} className="w-80 shrink-0">
+                                    <ArtworkCard artwork={artwork} themeColor={themeColor} textColor={textColor} textureOverlay={textureOverlay} />
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {shopSettings.isCustomized && !['default', 'art-train', 'spotlight-carousel', 'infinite-gallery'].includes(shopSettings.previewStyle) && (
+                            <div className="text-center py-12 border border-dashed border-slate-700 rounded-xl">
+                              <p className="text-slate-400">Preview style "{shopSettings.previewStyle}" selected.</p>
+                              <p className="text-sm text-slate-500 mt-2">This animation style will be rendered here.</p>
+                            </div>
+                          )}
                           
                           {/* Pagination */}
                           <div className="mt-12 flex justify-center">
@@ -368,7 +441,7 @@ export default function ProfileEditor() {
                   ) : (
                     // Custom Layout
                     <div className={`relative mx-auto transition-all duration-500 ease-in-out w-full`}>
-                      {isDesignMode ? (
+                      {(isDesignMode && activeSection !== null) ? (
                         <Reorder.Group axis="y" values={sections} onReorder={setSections} className="space-y-6">
                           {sections.map(section => (
                             <DraggableProfileSection 
@@ -421,6 +494,9 @@ export default function ProfileEditor() {
               themeSettings={themeSettings}
               setThemeSettings={setThemeSettings}
               onSave={handleSave}
+              pageTab={activeTab}
+              shopSettings={shopSettings}
+              setShopSettings={setShopSettings}
             />
           </div>
         )}
