@@ -125,6 +125,7 @@ export default function CreatorStudio() {
             <Zap className="w-5 h-5" />
             <span className="font-medium">Boost Reach</span>
           </Link>
+          {/* 
           <Link 
             to="/creator/NeonDreams" 
             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-slate-400 hover:bg-slate-800 hover:text-white"
@@ -132,6 +133,7 @@ export default function CreatorStudio() {
             <LayoutDashboard className="w-5 h-5" />
             <span className="font-medium">Profile Builder</span>
           </Link>
+          */}
           <SidebarItem 
             icon={<Tag className="w-5 h-5" />} 
             label="Sales & Promotions" 

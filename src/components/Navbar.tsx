@@ -159,9 +159,6 @@ export default function Navbar() {
 
           {/* Right Actions */}
           <div className="hidden md:flex items-center space-x-6">
-            <button className="text-slate-300 hover:text-cyan-400 transition-colors">
-              <Search className="h-5 w-5" />
-            </button>
             
             {/* Cart Dropdown */}
             <div className="relative" ref={cartRef}>

@@ -16,6 +16,67 @@ const artworks = [
   { id: 9, title: 'Pixel Art City', creator: '@RetroPixel', creatorRevenue: 1100, price: '$8.00', image: 'https://picsum.photos/seed/pixel1/600/400', type: 'Animated', category: 'Retro' },
 ];
 
+const MarketplaceCard: React.FC<{ artwork: any, activeTheme: string, handleCardHover: any, toggleFavorite: any, isFavorite: boolean }> = ({ artwork, activeTheme, handleCardHover, toggleFavorite, isFavorite }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <Link 
+      to={`/artwork/${artwork.id}`} 
+      className="group relative rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-cyan-500/20 hover:border-cyan-500/50 flex flex-col"
+      onMouseEnter={(e) => {
+        setIsHovered(true);
+        handleCardHover(e);
+      }}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="aspect-[4/3] w-full overflow-hidden relative">
+        <img 
+          src={artwork.image} 
+          alt={artwork.title} 
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          referrerPolicy="no-referrer"
+        />
+        {/* Hover-to-Inject Logic for Animated Previews */}
+        {isHovered && artwork.type.includes('Animated') && (
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            className="absolute inset-0 w-full h-full object-cover z-10"
+          >
+            <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4" />
+          </video>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+        
+        <div className="absolute top-4 right-4 rounded-lg bg-slate-950/80 backdrop-blur-md px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white border border-slate-700 z-20 shadow-lg">
+          {artwork.type}
+        </div>
+        {activeTheme === 'summer' && (
+          <div className="absolute top-4 left-4 z-20 sale-tag">
+            SALE
+          </div>
+        )}
+        {activeTheme === 'valentine' && (
+          <button 
+            onClick={(e) => toggleFavorite(e, artwork.id)}
+            className="absolute top-4 left-4 z-20 p-2.5 rounded-full bg-slate-950/50 backdrop-blur-md border border-slate-700 hover:bg-slate-900 transition-colors shadow-lg"
+          >
+            <Heart className={`w-5 h-5 transition-all duration-300 ${isFavorite ? 'heart-pop-active' : 'text-slate-400 hover:text-pink-400'}`} />
+          </button>
+        )}
+        {/* Hover Overlay Content */}
+        <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 transform translate-y-4 group-hover:translate-y-0">
+          <span className="text-2xl font-extrabold text-white drop-shadow-lg bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-xl border border-slate-700 shadow-lg">
+            {artwork.price}
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
 export default function Marketplace() {
   const { category } = useParams<{ category: string }>();
   const navigate = useNavigate();
@@ -223,45 +284,14 @@ export default function Marketplace() {
           {/* Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {artworks.map((artwork) => (
-              <Link 
+              <MarketplaceCard 
                 key={artwork.id} 
-                to={`/artwork/${artwork.id}`} 
-                className="group relative rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-cyan-500/20 hover:border-cyan-500/50 flex flex-col"
-                onMouseEnter={handleCardHover}
-              >
-                <div className="aspect-[4/3] w-full overflow-hidden relative">
-                  <img 
-                    src={artwork.image} 
-                    alt={artwork.title} 
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  
-                  <div className="absolute top-4 right-4 rounded-lg bg-slate-950/80 backdrop-blur-md px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white border border-slate-700 z-10 shadow-lg">
-                    {artwork.type}
-                  </div>
-                  {activeTheme === 'summer' && (
-                    <div className="absolute top-4 left-4 z-10 sale-tag">
-                      SALE
-                    </div>
-                  )}
-                  {activeTheme === 'valentine' && (
-                    <button 
-                      onClick={(e) => toggleFavorite(e, artwork.id)}
-                      className="absolute top-4 left-4 z-10 p-2.5 rounded-full bg-slate-950/50 backdrop-blur-md border border-slate-700 hover:bg-slate-900 transition-colors shadow-lg"
-                    >
-                      <Heart className={`w-5 h-5 transition-all duration-300 ${favorites.includes(artwork.id) ? 'heart-pop-active' : 'text-slate-400 hover:text-pink-400'}`} />
-                    </button>
-                  )}
-                  {/* Hover Overlay Content */}
-                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 transform translate-y-4 group-hover:translate-y-0">
-                    <span className="text-2xl font-extrabold text-white drop-shadow-lg bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-xl border border-slate-700 shadow-lg">
-                      {artwork.price}
-                    </span>
-                  </div>
-                </div>
-              </Link>
+                artwork={artwork} 
+                activeTheme={activeTheme} 
+                handleCardHover={handleCardHover} 
+                toggleFavorite={toggleFavorite} 
+                isFavorite={favorites.includes(artwork.id)} 
+              />
             ))}
           </div>
           
